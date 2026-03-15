@@ -1,0 +1,52 @@
+# .clang-tidy
+---
+# 合并所有检查规则到单个 Checks 键（用逗号分隔）
+Checks: >-
+  clang-analyzer-*,
+  misc-misra-c2012-*,
+  readability-identifier-naming,
+  misc-unused-parameters,
+  misc-c-static-assert,
+  performance-move-const-arg,
+  cppcoreguidelines-pro-type-vararg,
+  modernize-use-nullptr,
+  modernize-use-auto
+
+# 将 MISRA C 规则设为错误（必须修复）
+WarningsAsErrors: 'misc-misra-c2012-*'
+
+# 检查所有头文件
+HeaderFilterRegex: '.*'
+
+# 不自动格式化代码
+FormatStyle: none
+
+# 命名规范配置（通过 CheckOptions 嵌入）
+CheckOptions:
+  # 类名使用驼峰命名（如 MyClass）
+  - key: readability-identifier-naming.Class
+    value: CamelCase
+
+  # 函数名使用蛇形命名（如 my_function）
+  - key: readability-identifier-naming.Function
+    value: snake_case
+
+  # 变量名使用蛇形命名（如 my_variable）
+  - key: readability-identifier-naming.Variable
+    value: snake_case
+
+  # 宏名使用蛇形命名（如 MY_MACRO）
+  - key: readability-identifier-naming.Macro
+    value: snake_case
+
+  # 全局变量前缀为 g_（如 g_config）
+  - key: readability-identifier-naming.GlobalVariable
+    value: g_snake_case
+
+  # 常量前缀为 k_（如 kMaxRetry）
+  - key: readability-identifier-naming.Constant
+    value: k_snake_case
+
+  # 严格检查函数参数未使用（警告升级为错误）
+  - key: readability-identifier-naming.UnusedParameter
+    value: error
