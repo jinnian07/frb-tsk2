@@ -49,7 +49,12 @@ def create_app() -> FastAPI:
     async def judge(req: JudgeRequest) -> JudgeResponse:
         try:
             service: JudgeService = app.state.judge_service
-            return await run_in_threadpool(service.judge, req.problem_id, req.code)
+            return await run_in_threadpool(
+                service.judge,
+                req.problem_id,
+                req.code,
+                req.judge_mode,
+            )
         except FileNotFoundError as e:
             raise HTTPException(status_code=400, detail=str(e))
         except Exception as e:

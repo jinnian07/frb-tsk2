@@ -6,6 +6,7 @@ from pydantic import BaseModel
 class JudgeRequest(BaseModel):
     problem_id: str
     code: str
+    judge_mode: Literal["c", "cortexm_baremetal_uart"] = "c"
 
 
 class TestCaseResult(BaseModel):

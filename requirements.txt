@@ -20,3 +20,4 @@ sqlalchemy==2.0.28
 alembic==1.13.0
 # 其他工具
 python-dotenv==1.0.0
+yarl==1.23.0

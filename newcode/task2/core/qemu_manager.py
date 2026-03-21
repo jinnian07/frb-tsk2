@@ -6,6 +6,7 @@ import win32con
 import os
 import random
 from typing import Callable, Optional
+from pathlib import Path
 
 class QemuManager:
     def __init__(self, config, container_id: Optional[int] = None):
@@ -91,11 +92,73 @@ class QemuManager:
             self._output_thread = threading.Thread(target=self._read_output_loop, daemon=True)
             self._output_thread.start()
 
-            threading.Thread(target=self._embed_logic, args=(log_callback,), daemon=True).start()
+            # API 场景 container_id=None 时不需要嵌入窗口，避免无谓的枚举超时。
+            if self.container_id is not None:
+                threading.Thread(target=self._embed_logic, args=(log_callback,), daemon=True).start()
         except FileNotFoundError:
             self._log(f"错误: 找不到 QEMU 可执行文件: {executable}")
         except Exception as e:
             self._log(f"启动失败: {e}")
+
+    def start_qemu_baremetal(
+        self,
+        log_callback: Callable[[str], None],
+        firmware_bin_path: Path,
+        *,
+        uart_host: str = "127.0.0.1",
+        uart_port: int,
+        machine: str = "stm32vldiscovery",
+    ):
+        """
+        One-shot bare-metal QEMU session:
+          - Cortex-M3 STM32VLDISCOVERY
+          - USART1 UART1 is connected to a TCP socket chardev (server mode)
+          - QEMU monitor uses stdio so `send_debug_command()` can inject faults
+        """
+        self.set_log_callback(log_callback)
+
+        # Stop previous session (bare-metal mode is intentionally one-shot per test point).
+        if self.process and self.process.poll() is None:
+            try:
+                self.stop_qemu()
+            except Exception:
+                pass
+
+        executable = self.config.get("baremetal_executable", "qemu-system-arm")
+
+        cmd = [
+            executable,
+            "-M",
+            machine,
+            "-kernel",
+            str(firmware_bin_path),
+            "-nographic",
+            "-monitor",
+            "stdio",
+            "-chardev",
+            f"socket,id=uart1,host={uart_host},port={uart_port},server,nowait",
+            "-serial",
+            "chardev:uart1",
+            "-serial",
+            "null",
+            "-serial",
+            "null",
+        ]
+
+        self._stop_output.clear()
+        self.process = subprocess.Popen(
+            cmd,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            bufsize=1,
+            text=True,
+            encoding="utf-8",
+            errors="ignore",
+        )
+
+        self._output_thread = threading.Thread(target=self._read_output_loop, daemon=True)
+        self._output_thread.start()
 
     def _read_output_loop(self):
         # 持续读取 QEMU 输出，给调用方的回调做“实时日志”输入
@@ -127,6 +190,20 @@ class QemuManager:
             address = random.randint(0x20000000, 0x20010000)
             bit = random.randint(0, 31)
             self.send_debug_command(f"inject_error {address} {bit}")
+
+    def inject_fault_baremetal_memory_bitflip(
+        self,
+        address_low: int = 0x20000000,
+        address_high_exclusive: int = 0x20002000,
+    ):
+        """
+        Bare-metal STM32F100 SRAM range:
+          - SRAM_BASE_ADDRESS = 0x20000000
+          - SRAM_SIZE = 8K => end exclusive 0x20002000
+        """
+        address = random.randint(address_low, address_high_exclusive - 1)
+        bit = random.randint(0, 31)
+        self.send_debug_command(f"inject_error {address} {bit}")
 
     def _embed_logic(self, log_callback):
         target_title = "qemu-c"
