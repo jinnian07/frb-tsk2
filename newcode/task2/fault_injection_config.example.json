@@ -1,0 +1,13 @@
+{
+    "_comment": "复制为 fault_injection_config.json 后按需修改；缺省文件时使用程序内置默认值。",
+    "gdb_executable": "arm-none-eabi-gdb",
+    "gdb_path": "",
+    "gdb_host": "127.0.0.1",
+    "gdb_port": 0,
+    "gdb_timeout_sec": 15,
+    "_inject_after_comment": "true：先发送 UART 测试输入再翻转；false：旧行为（连接后、发输入前翻转，便于对照）",
+    "inject_after_uart_input": true,
+    "_sram_comment": "随机翻转地址落在 [low, high_exclusive)；可改为链接脚本中保留的演示全局区，需与题面一致",
+    "sram_flip_address_low": "0x20000000",
+    "sram_flip_address_high_exclusive": "0x20002000"
+}

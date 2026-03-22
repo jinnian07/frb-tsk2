@@ -18,9 +18,9 @@
 #     {"name": "1.in", "status": "AC", "time_ms": 100, "info": "通过"},
 #     {"name": "2.in", "status": "WA", "time_ms": 120, "info": "答案错误"}
 #   ],
-#   "survival_rate": 85.5,            # 异常注入生存率（%）
-#   "total_tests": 4,                 # 总测试次数（正常+故障注入）
-#   "successful_recoveries": 3       # 成功恢复次数
+#   "survival_rate": 0.75,            # 异常注入生存率 [0,1]（仅裸机：注入后 AC / 注入次数；普通 C 为 0）
+#   "total_tests": 3,                 # 故障注入试验次数（分母）；普通 C 为 0
+#   "successful_recoveries": 2       # 分子：注入后 AC 的次数
 # }
 
 from pathlib import Path

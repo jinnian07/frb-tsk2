@@ -56,5 +56,9 @@ SECTIONS
         . = ORIGIN(RAM) + LENGTH(RAM);
     }
     _estack = ORIGIN(RAM) + LENGTH(RAM);
+    /*
+     * Stack grows down from _estack toward RAM. Usable stack for painting/watermark
+     * is [_ebss, _estack) — no separate heap in this script; all RAM above .bss is stack.
+     */
 }
 

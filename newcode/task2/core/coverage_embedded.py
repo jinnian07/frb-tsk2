@@ -270,7 +270,7 @@ def run_embedded_host_coverage(
         parsed = _parse_gcov_summary(out_txt)
         lines = [
             f"[课堂覆盖率·宿主 gcov 近似] 题目 {problem_id}",
-            "说明: 非 QEMU 内执行，路径与裸机可能不同；基于 gcov 行/分支%，非 DO-178C MC/DC。",
+            "说明: 在宿主机 gcc 上近似统计，与 QEMU 内执行路径可能不同。",
         ]
         if parsed["line_pct"] is not None:
             lines.append(

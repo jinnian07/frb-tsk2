@@ -4,20 +4,42 @@ import time
 import win32gui
 import win32con
 import os
-import random
 from typing import Callable, Optional
 from pathlib import Path
 
+from core.fault_injection_config import gdb_command_for_subprocess
+from core.gdb_memory_inject import gdb_memory_bitflip
+
+
+def _pick_free_tcp_port() -> int:
+    import socket
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(("127.0.0.1", 0))
+    port = int(s.getsockname()[1])
+    s.close()
+    return port
+
+
 class QemuManager:
-    def __init__(self, config, container_id: Optional[int] = None):
+    def __init__(
+        self,
+        config,
+        container_id: Optional[int] = None,
+        *,
+        fault_config: Optional[dict] = None,
+    ):
         self.config = config
         self.container_id = container_id
+        self._fault_config = fault_config or {}
         self.process = None
         self.hwnd = None
         self._log_callback: Optional[Callable[[str], None]] = None
         self._callback_lock = threading.Lock()
         self._output_thread: Optional[threading.Thread] = None
         self._stop_output = threading.Event()
+        self._baremetal_gdb_host: str = "127.0.0.1"
+        self._baremetal_gdb_port: Optional[int] = None
 
     def set_log_callback(self, log_callback: Optional[Callable[[str], None]]):
         # 可在单次判题期间动态替换回调，便于在 API 场景下按请求收集日志
@@ -36,34 +58,34 @@ class QemuManager:
         if self.process and self.process.poll() is None:
             self._log("QEMU 已在运行中。")
             return
-        
-        executable = self.config.get('executable', 'qemu-system-aarch64')
-        bios_path = self.config.get('bios', '')
-        drive_path = self.config.get('drive', '')
-        
+
+        executable = self.config.get("executable", "qemu-system-aarch64")
+        bios_path = self.config.get("bios", "")
+        drive_path = self.config.get("drive", "")
+
         if bios_path and not os.path.exists(bios_path):
             log_callback(f"错误: BIOS文件不存在: {bios_path}")
             return
-        
+
         if drive_path and not os.path.exists(drive_path):
             log_callback(f"错误: 镜像文件不存在: {drive_path}")
             return
-            
+
         cmd = [
             executable,
             "-M", "virt", "-cpu", "cortex-a57", "-smp", "4", "-m", "4096M",
             "-name", "qemu-c,process=qemu-c-instance",
         ]
-        
+
         if bios_path:
             cmd.extend(["-bios", bios_path])
-        
+
         if drive_path:
             cmd.extend([
                 "-drive", f"if=none,file={drive_path},id=hd0",
                 "-device", "virtio-blk-pci,drive=hd0",
             ])
-        
+
         cmd.extend([
             "-device", "virtio-net-pci,netdev=net0",
             "-netdev", "user,id=net0,hostfwd=tcp::2222-:22",
@@ -71,12 +93,11 @@ class QemuManager:
             "-device", "qemu-xhci", "-device", "usb-kbd", "-device", "usb-tablet",
             "-display", "sdl"
         ])
-        
+
         try:
             self._log(f"正在启动 QEMU: {executable}")
             self._log(f"BIOS: {bios_path}")
             self._log(f"镜像: {drive_path}")
-            # stdin=PIPE 用于故障注入/monitor 命令下发；stdout+stderr 合并便于恢复检测
             self._stop_output.clear()
             self.process = subprocess.Popen(
                 cmd,
@@ -113,7 +134,7 @@ class QemuManager:
         One-shot bare-metal QEMU session:
           - Cortex-M3 STM32VLDISCOVERY
           - USART1 UART1 is connected to a TCP socket chardev (server mode)
-          - QEMU monitor uses stdio so `send_debug_command()` can inject faults
+          - gdbstub on TCP（端口由 fault_injection_config 固定或自动选择）供 GDB 位翻转
         """
         self.set_log_callback(log_callback)
 
@@ -123,6 +144,16 @@ class QemuManager:
                 self.stop_qemu()
             except Exception:
                 pass
+
+        fc = self._fault_config
+        gdb_port_cfg = int(fc.get("gdb_port") or 0)
+        if gdb_port_cfg <= 0:
+            gdb_port = _pick_free_tcp_port()
+        else:
+            gdb_port = gdb_port_cfg
+
+        self._baremetal_gdb_host = str(fc.get("gdb_host") or "127.0.0.1").strip() or "127.0.0.1"
+        self._baremetal_gdb_port = gdb_port
 
         executable = self.config.get("baremetal_executable", "qemu-system-arm")
 
@@ -134,7 +165,9 @@ class QemuManager:
             str(firmware_bin_path),
             "-nographic",
             "-monitor",
-            "stdio",
+            "none",
+            "-gdb",
+            f"tcp::{gdb_port}",
             "-chardev",
             f"socket,id=uart1,host={uart_host},port={uart_port},server,nowait",
             "-serial",
@@ -174,36 +207,24 @@ class QemuManager:
         except Exception as e:
             self._log(f"读取 QEMU 输出失败: {e}")
 
-    def send_debug_command(self, command: str):
-        if not self.process or self.process.poll() is not None:
-            raise RuntimeError("QEMU 未运行，无法注入故障")
-        if not self.process.stdin:
-            raise RuntimeError("QEMU 进程 stdin 未初始化，无法发送 debug 命令")
-        self.process.stdin.write(f"{command}\n")
-        self.process.stdin.flush()
-
-    def inject_fault(self, fault_type: str = "memory_bitflip"):
+    def apply_gdb_memory_bitflip(self, address: int, bit: int) -> None:
         """
-        注入故障（与原 GUI 逻辑一致：memory_bitflip 随机选择地址+bit 并下发 inject_error）。
+        通过 arm-none-eabi-gdb 连接当前裸机会话的 gdbstub，对 SRAM 字做异或位翻转。
         """
-        if fault_type == "memory_bitflip":
-            address = random.randint(0x20000000, 0x20010000)
-            bit = random.randint(0, 31)
-            self.send_debug_command(f"inject_error {address} {bit}")
-
-    def inject_fault_baremetal_memory_bitflip(
-        self,
-        address_low: int = 0x20000000,
-        address_high_exclusive: int = 0x20002000,
-    ):
-        """
-        Bare-metal STM32F100 SRAM range:
-          - SRAM_BASE_ADDRESS = 0x20000000
-          - SRAM_SIZE = 8K => end exclusive 0x20002000
-        """
-        address = random.randint(address_low, address_high_exclusive - 1)
-        bit = random.randint(0, 31)
-        self.send_debug_command(f"inject_error {address} {bit}")
+        if self._baremetal_gdb_port is None:
+            raise RuntimeError("当前未处于裸机 QEMU 会话，无法 GDB 注入")
+        gdb_exe = gdb_command_for_subprocess(self._fault_config)
+        timeout = float(self._fault_config.get("gdb_timeout_sec") or 15.0)
+        ok, err = gdb_memory_bitflip(
+            gdb_exe,
+            host=self._baremetal_gdb_host,
+            port=self._baremetal_gdb_port,
+            address=address,
+            bit=bit,
+            timeout_sec=timeout,
+        )
+        if not ok:
+            raise RuntimeError(f"GDB 位翻转失败: {err}")
 
     def _embed_logic(self, log_callback):
         target_title = "qemu-c"
@@ -211,7 +232,7 @@ class QemuManager:
             if self.process.poll() is not None:
                 log_callback("QEMU 进程已退出。")
                 return
-            
+
             found_hwnd = None
             def cb(hwnd, _):
                 nonlocal found_hwnd
@@ -219,12 +240,12 @@ class QemuManager:
                     title = win32gui.GetWindowText(hwnd)
                     if target_title in title.lower():
                         found_hwnd = hwnd
-            
+
             try:
                 win32gui.EnumWindows(cb, None)
             except Exception as e:
                 log_callback(f"枚举窗口错误: {e}")
-            
+
             if found_hwnd:
                 self.hwnd = found_hwnd
                 actual_title = win32gui.GetWindowText(self.hwnd)
@@ -250,3 +271,4 @@ class QemuManager:
             self._stop_output.set()
             self.process.terminate()
             self.process = None
+        self._baremetal_gdb_port = None

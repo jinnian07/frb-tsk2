@@ -1,5 +1,6 @@
 import ctypes
 import tkinter as tk
+from typing import Optional
 from tkinter import ttk, messagebox
 import threading
 import os
@@ -16,6 +17,14 @@ from core.baremetal_uart_runner import BareMetalUartRunner
 from core.ssh_executor import SSHExecutor
 from core.qemu_manager import QemuManager
 from core.config import load_config, scan_problems
+from core.fault_injection_config import (
+    load_fault_injection_config,
+    random_sram_flip_address,
+)
+from core.stack_watermark import (
+    format_stack_watermark_composite_log_line,
+    format_watermark_summary,
+)
 from ui.components import OJComponents
 from ui.md_viewer import MDViewer
 from core.project_manager import create_user_project
@@ -29,12 +38,14 @@ class QemuOJApp:
         self.root.minsize(1200, 700)
         
         self.config = load_config()
+        self.task2_root = Path(__file__).resolve().parent
+        self.fault_config = load_fault_injection_config(self.task2_root)
         self.executor = SSHExecutor(self.config['ssh'])
         self.current_problem = "P0001"
         self.qemu_mgr = None
         self.judge_running = False
-        self.total_tests = 0  # 总测试用例数（含故障注入）
-        self.successful_tests = 0  # 成功恢复的测试用例数
+        self.survival_injection_total = 0
+        self.survival_injection_survived = 0
         self.judge_mode = tk.StringVar(value="cortexm")  # GUI 默认仍可跑普通 C，首次以普通 C 为准
         self.bare_builder = BareMetalBuilder()
         self.bare_runner = None
@@ -107,7 +118,9 @@ class QemuOJApp:
     def init_qemu(self):
         self.qemu_container.update_idletasks()
         container_id = self.qemu_container.winfo_id()
-        self.qemu_mgr = QemuManager(self.config['qemu'], container_id)
+        self.qemu_mgr = QemuManager(
+            self.config["qemu"], container_id, fault_config=self.fault_config
+        )
         self.log("系统初始化完成，等待 QEMU 启动...")
         self.qemu_mgr.start_qemu(self.log)
 
@@ -118,25 +131,23 @@ class QemuOJApp:
         self.log_text.see("end")
         self.log_text.config(state="disabled")
 
-    def _do_update(self, name, status, time_val=None, info=None):
+    def _do_update(self, name, status, time_val=None, stack_col="-", info=None):
         """主线程更新结果表（由 update_case_result 经 root.after 调度）。"""
         time_str = "-" if time_val is None else str(time_val)
+        stack_str = "-" if stack_col is None or stack_col == "" else str(stack_col)
         info_str = "-" if info is None else str(info)
         for item in self.res_table.get_children():
             vals = self.res_table.item(item, "values")
             if vals and vals[0] == name:
                 self.res_table.item(
-                    item, values=(name, status, time_str, info_str)
+                    item, values=(name, status, time_str, stack_str, info_str)
                 )
                 break
 
     def refresh_problems(self):
         problems = scan_problems()
         if problems:
-            self.prob_combo['values'] = problems
-            self.log(f"已扫描到 {len(problems)} 个题目")
-        else:
-            self.log("未找到任何题目目录")
+            self.prob_combo["values"] = problems
 
     def load_problem(self):
         try:
@@ -156,7 +167,7 @@ class QemuOJApp:
             test_cases = OJEngine.get_test_cases(self.current_problem)
             self.res_table.delete(*self.res_table.get_children())
             for case in test_cases:
-                self.res_table.insert("", "end", values=(case["name"], "待测", "-", "-"))
+                self.res_table.insert("", "end", values=(case["name"], "待测", "-", "-", "-"))
             
             self.user_code_path = create_user_project(self.current_problem)
             if os.path.exists(self.user_code_path):
@@ -167,8 +178,7 @@ class QemuOJApp:
             else:
                 messagebox.showerror("错误", f"用户工程创建失败：{self.user_code_path}")
                 return
-            
-            self.log(f"已加载题目：{self.current_problem}")
+
             self.btn_judge.config(state="normal")
             
         except Exception as e:
@@ -329,15 +339,20 @@ class QemuOJApp:
             cases = OJEngine.get_test_cases(self.current_problem)
             if not os.path.exists(".temp"):
                 os.makedirs(".temp")
-            
+
+            self.log(
+                "提示：普通 C（SSH）评测不支持 QEMU 内存位翻转；"
+                "异常注入生存率仅在「裸机 Cortex-M UART」模式下统计。"
+            )
+
             ac_count = 0
             for i, case in enumerate(cases):
                 if self.executor.should_stop():
                     self.log("评测已取消")
-                    self.update_case_result(case['name'], "取消", "-", "用户停止")
+                    self.update_case_result(case['name'], "取消", "-", "-", "用户停止")
                     break
                 
-                self.update_case_result(case['name'], "运行中", "-", "-")
+                self.update_case_result(case['name'], "运行中", "-", "-", "-")
                 self.log(f"测试 {case['name']}...")
 
                 # 正常测试流程
@@ -358,45 +373,18 @@ class QemuOJApp:
                     if is_ac:
                         ac_count += 1
                     
-                    self.update_case_result(case['name'], status, exec_time, 
-                                           "通过" if is_ac else "答案错误")
+                    self.update_case_result(
+                        case['name'],
+                        status,
+                        exec_time,
+                        "-",
+                        "通过" if is_ac else "答案错误",
+                    )
                     self.log(f"{case['name']}: {status} ({exec_time}ms)")
 
                 except Exception as e:
-                    self.update_case_result(case['name'], "RE", "-", str(e)[:20])
+                    self.update_case_result(case['name'], "RE", "-", "-", str(e)[:20])
                     self.log(f"{case['name']}: 运行错误 - {e}")
-
-                # 故障注入测试流程
-                self.log("\n--- 注入故障后重新测试 ---")
-                try:
-                    self.inject_fault(fault_type="memory_bitflip")
-                    self.executor.upload_file(case['in_path'], "in.txt")
-                    _, _, exec_time = self.executor.execute_timed("./app < in.txt > out.txt")
-                    
-                    self.executor.download_file("out.txt", local_res)
-                    
-                    with open(case['out_path'], 'r', encoding='utf-8') as f:
-                        expected = f.read()
-                    with open(local_res, 'r', encoding='utf-8') as f:
-                        actual = f.read()
-                    
-                    is_ac = OJEngine.compare(expected, actual)
-                    status = "AC" if is_ac else "WA"
-                    if is_ac:
-                        ac_count += 1
-                    
-                    recovery_status = "成功" if self.check_recovery() else "失败"
-                    self.update_case_result(
-                        case['name'], 
-                        f"RE（故障后{recovery_status}）", 
-                        exec_time, 
-                        "答案错误" if not is_ac else ""
-                    )
-                    self.log(f"{case['name']}: {status} ({exec_time}ms) - {recovery_status}")
-
-                except Exception as e:
-                    self.update_case_result(case['name'], "RE", "-", str(e)[:20])
-                    self.log(f"{case['name']}: 故障后运行错误 - {e}")
 
             total = len(cases)
             self.log(f"\n=== 最终评测结果 ===")
@@ -415,8 +403,8 @@ class QemuOJApp:
         """
         Cortex-M bare-metal UART OJ mode (QEMU stm32vldiscovery + USART1).
         - 每个测试点一次性启动 QEMU，喂入 UART 输入，捕获 UART 输出后终止 QEMU
-        - 故障注入：启动后通过 QEMU monitor 下发 inject_error，然后再喂入同一组输入
-        - 恢复判定：继续复用 ERROR_RECOVERED（来自 QEMU monitor 输出）
+        - 故障注入：UART 连通后由 arm-none-eabi-gdb 经 gdbstub 对 SRAM 做位翻转，再喂入同一组输入
+        - 恢复判定：注入后 AC 即算恢复；ERROR_RECOVERED 日志仅用于调试观测
         """
         try:
             self.log("开始裸机 Cortex-M UART 评测...")
@@ -441,14 +429,15 @@ class QemuOJApp:
 
             cases = OJEngine.get_test_cases(self.current_problem)
             ac_count = 0
+            normal_stack_scores: list[Optional[int]] = []
 
             for i, case in enumerate(cases):
                 if not self.judge_running:
                     self.log("评测已取消")
-                    self.update_case_result(case["name"], "取消", "-", "用户停止")
+                    self.update_case_result(case["name"], "取消", "-", "-", "用户停止")
                     break
 
-                self.update_case_result(case["name"], "运行中", "-", "-")
+                self.update_case_result(case["name"], "运行中", "-", "-", "-")
                 self.log(f"测试 {case['name']} (正常)...")
 
                 in_text = open(case["in_path"], "r", encoding="utf-8", errors="ignore").read()
@@ -467,6 +456,8 @@ class QemuOJApp:
                     artifacts.bin_path,
                     in_text,
                     logger=_logger,
+                    firmware_elf_path=artifacts.elf_path,
+                    stack_watermark_cfg=self.config.get("stack_watermark"),
                     total_timeout_sec=10.0,
                     uart_connect_timeout_sec=5.0,
                     uart_output_idle_sec=0.35,
@@ -476,25 +467,36 @@ class QemuOJApp:
                 status = "AC" if is_ac else "WA"
                 if is_ac:
                     ac_count += 1
+                _sw = normal_res.stack_watermark
+                _stack_txt = (
+                    format_watermark_summary(_sw) if _sw else "-"
+                ) or "-"
                 self.update_case_result(
                     case["name"],
                     status,
                     normal_res.exec_time_ms,
+                    _stack_txt,
                     "通过" if is_ac else "答案错误",
                 )
                 self.log(f"{case['name']}: {status} ({normal_res.exec_time_ms}ms)")
+                _sc = (
+                    _sw.get("stack_watermark_score") if _sw else None
+                )
+                normal_stack_scores.append(_sc)
 
                 # Fault injection run
                 self.log("\n--- 注入故障后重新测试 ---")
                 recovery_event.clear()
 
-                addr = random.randint(0x20000000, 0x20002000 - 1)
+                addr = random_sram_flip_address(self.fault_config)
                 bit = random.randint(0, 31)
 
                 injected_res = bare_runner.run_once(
                     artifacts.bin_path,
                     in_text,
                     logger=_logger,
+                    firmware_elf_path=artifacts.elf_path,
+                    stack_watermark_cfg=self.config.get("stack_watermark"),
                     inject_error_addr=addr,
                     inject_error_bit=bit,
                     recovery_event=recovery_event,
@@ -503,30 +505,32 @@ class QemuOJApp:
                     uart_output_idle_sec=0.35,
                 )
 
-                recovery_success = bool(injected_res.recovery_success)
-                if not recovery_success:
-                    self.update_case_result(
-                        case["name"],
-                        "RE",
-                        injected_res.exec_time_ms,
-                        "故障后未恢复",
-                    )
-                    self.log(f"{case['name']}: RE（故障后未恢复） ({injected_res.exec_time_ms}ms)")
-                else:
-                    is_ac2 = OJEngine.compare(expected, injected_res.actual_output)
-                    status2 = "AC" if is_ac2 else "WA"
-                    self.update_case_result(
-                        case["name"],
-                        status2,
-                        injected_res.exec_time_ms,
-                        "通过" if is_ac2 else "答案错误",
-                    )
-                    self.log(f"{case['name']}: {status2} ({injected_res.exec_time_ms}ms) - 恢复成功")
+                self.survival_injection_total += 1
+                is_ac2 = OJEngine.compare(expected, injected_res.actual_output)
+                if is_ac2:
+                    self.survival_injection_survived += 1
+                status2 = "AC" if is_ac2 else "WA"
+                _sw2 = injected_res.stack_watermark
+                _stack_txt2 = (
+                    format_watermark_summary(_sw2) if _sw2 else "-"
+                ) or "-"
+                self.update_case_result(
+                    case["name"],
+                    status2,
+                    injected_res.exec_time_ms,
+                    _stack_txt2,
+                    "通过" if is_ac2 else "答案错误",
+                )
+                self.log(
+                    f"{case['name']}: {status2} ({injected_res.exec_time_ms}ms) - "
+                    f"{'恢复成功（按注入后AC判定）' if is_ac2 else '未恢复（按注入后AC判定）'}"
+                )
 
-            total = len(cases) * 2
+            total = len(cases)
             self.log("\n=== 最终评测结果 ===")
             self.log(f"正常通过: {ac_count}/{len(cases)}")
             self.calculate_survival_rate()
+            self.log(format_stack_watermark_composite_log_line(normal_stack_scores))
 
             if self.config.get("enable_coverage_embedded", False):
                 self._run_embedded_coverage_host(
@@ -556,53 +560,37 @@ class QemuOJApp:
                 case_in_paths=in_paths,
                 log=self.log,
             )
-            st = res.get("summary_text") or ""
-            if not st:
+            if not res.get("summary_text"):
                 return
-
-            def _popup():
-                messagebox.showinfo(
-                    "课堂覆盖率 (gcov 近似)",
-                    st[:900] + ("…" if len(st) > 900 else ""),
-                )
-
-            self.root.after(0, _popup)
         except Exception as e:
             self.log(f"宿主覆盖率失败: {e}")
 
-    def inject_fault(self, fault_type="memory_bitflip"):
-        if fault_type == "memory_bitflip":
-            address = random.randint(0x20000000, 0x20010000)
-            bit = random.randint(0, 31)
-            self.qemu_mgr.send_debug_command(f"inject_error {address} {bit}")
-
-    def send_debug_command(self, command):
-        if self.qemu_mgr and self.qemu_mgr.process:
-            self.qemu_mgr.process.stdin.write(f"{command}\n")
-            self.qemu_mgr.process.stdin.flush()
-
-    def check_recovery(self):
-        log_tail = self.log_text.get("1.0", "end-1c")[-200:]
-        return "ERROR_RECOVERED" in log_tail
-
-    def update_case_result(self, name, status, time_val=None, info=None):
-        self.root.after(0, lambda: self._do_update(name, status, time_val, info))
-        self.total_tests += 1
-        if status != "RE" or not info.startswith("故障后未恢复"):
-            self.successful_tests += 1
+    def update_case_result(self, name, status, time_val=None, stack_col="-", info=None):
+        self.root.after(
+            0,
+            lambda: self._do_update(name, status, time_val, stack_col, info),
+        )
 
     def calculate_survival_rate(self):
-        if self.total_tests == 0:
-            rate = 0.0
-        else:
-            rate = (self.successful_tests / self.total_tests) * 100
-        self.log(f"异常注入生存率: {rate:.2f}%")
+        if self.survival_injection_total <= 0:
+            self.log(
+                "异常注入生存率: N/A（本次未执行 GDB 位翻转注入；请使用裸机 Cortex-M UART 模式）"
+            )
+            return
+        rate = self.survival_injection_survived / self.survival_injection_total
+        self.log(
+            f"异常注入生存率: {rate * 100:.2f}% "
+            f"（{self.survival_injection_survived}/{self.survival_injection_total}，"
+            f"注入后 AC / 注入总次数）"
+        )
 
     def start_judge_thread(self):
         if self.judge_running:
             messagebox.showwarning("提示", "评测进行中...")
             return
         self.judge_running = True
+        self.survival_injection_total = 0
+        self.survival_injection_survived = 0
         self.btn_judge.config(state="disabled")
         self.btn_stop.config(state="normal")
         mode = self.mode_combo.get() if hasattr(self, "mode_combo") else "普通 C"

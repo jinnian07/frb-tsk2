@@ -13,6 +13,22 @@ extern uint32_t _sbss;
 extern uint32_t _ebss;
 extern uint32_t _estack;
 
+/* Filled by startup before main; host reads SRAM via GDB stub to compute max stack depth. */
+#define OJ_STACK_PAINT_U32 0xDEADBEEFu
+
+static void oj_paint_stack(void) {
+    /*
+     * Assumption (linker_stm32vldiscovery.ld): stack is [_ebss .. _estack), growing down from _estack.
+     * Paint so the host can find the lowest touched word after the run.
+     */
+    uintptr_t lo = (uintptr_t)&_ebss;
+    lo = (lo + 3u) & ~(uintptr_t)3u;
+    uintptr_t hi = (uintptr_t)&_estack;
+    for (uintptr_t a = lo; a < hi; a += 4u) {
+        *(volatile uint32_t *)a = OJ_STACK_PAINT_U32;
+    }
+}
+
 void Default_Handler(void) __attribute__((noreturn));
 void Reset_Handler(void) __attribute__((noreturn));
 
@@ -37,6 +53,7 @@ static void copy_and_zero(void) {
 
 void Reset_Handler(void) {
     copy_and_zero();
+    oj_paint_stack();
 
     // USART model in QEMU accepts RX only when UE+RE bits are set.
     uart_init();

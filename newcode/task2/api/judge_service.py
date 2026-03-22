@@ -12,7 +12,9 @@ from core.baremetal_uart_runner import BareMetalUartRunner
 from core.config import load_config
 from core.oj_engine import OJEngine
 from core.qemu_manager import QemuManager
+from core.fault_injection_config import load_fault_injection_config, random_sram_flip_address
 from core.ssh_executor import SSHExecutor
+from core.stack_watermark import testcase_stack_wm_api
 
 from .schemas import (
     JudgeResponse,
@@ -24,15 +26,17 @@ class JudgeService:
     """
     复用现有核心判题链路：
     SSH 侧上传代码/输入 -> gcc 编译 -> 运行程序并下载 out.txt -> compare 标准输出
-    故障注入侧：下发 inject_error -> 再跑一次 -> 通过 ERROR_RECOVERED 判断恢复
+    裸机侧：GDB + gdbstub 位翻转；生存率定义为注入后 AC / 注入次数（ERROR_RECOVERED 仅观测）
     """
 
     def __init__(self, task2_root: Path):
         self.task2_root = task2_root
         self.config = load_config(str(self.task2_root / "config.json"))
+        self.fault_config = load_fault_injection_config(self.task2_root)
         self.executor = SSHExecutor(self.config["ssh"])
-        # API 场景无 Tk container，故障注入/恢复检测仍可工作（不嵌入窗口）
-        self.qemu_mgr = QemuManager(self.config["qemu"], container_id=None)
+        self.qemu_mgr = QemuManager(
+            self.config["qemu"], container_id=None, fault_config=self.fault_config
+        )
         self._bare_builder = BareMetalBuilder()
         self._bare_runner = BareMetalUartRunner(self.qemu_mgr)
 
@@ -50,11 +54,6 @@ class JudgeService:
 
     def _read_text(self, path: Path) -> str:
         return path.read_text(encoding="utf-8", errors="ignore")
-
-    def inject_fault_memory_bitflip(self):
-        address = random.randint(0x20000000, 0x20010000)
-        bit = random.randint(0, 31)
-        self.qemu_mgr.send_debug_command(f"inject_error {address} {bit}")
 
     def _to_int_ms(self, exec_time_ms: Optional[str]) -> Optional[int]:
         if exec_time_ms is None:
@@ -88,8 +87,8 @@ class JudgeService:
 
         - Build: cross-compile user `code` into `firmware.bin` (QEMU loads via -kernel)
         - Run: one-shot QEMU per test point, feed UART input, capture UART output
-        - Fault injection: send `inject_error addr bit` to QEMU monitor, then re-run
-        - Recovery detection: keep using ERROR_RECOVERED from QEMU logs (same semantics)
+        - Fault injection: GDB gdbstub memory bit-flip before UART input
+        - Recovery: survival counts AC on injected run (ERROR_RECOVERED is observational)
         """
         job_id = str(uuid.uuid4())
         problem_dir = self.task2_root / problem_id
@@ -123,13 +122,14 @@ class JudgeService:
                         )
                     ],
                     survival_rate=0.0,
-                    total_tests=1,
+                    total_tests=0,
                     successful_recoveries=0,
                 )
 
             cases = OJEngine.get_test_cases(str(problem_dir))
             test_cases: list[TestCaseResult] = []
             successful_recoveries = 0
+            injection_total = 0
 
             for case in cases:
                 name = case["name"]
@@ -142,6 +142,8 @@ class JudgeService:
                         artifacts.bin_path,
                         in_text,
                         logger=logger,
+                        firmware_elf_path=artifacts.elf_path,
+                        stack_watermark_cfg=self.config.get("stack_watermark"),
                         total_timeout_sec=10.0,
                         uart_connect_timeout_sec=5.0,
                         uart_output_idle_sec=0.35,
@@ -154,6 +156,11 @@ class JudgeService:
                             status=status,
                             time_ms=normal_res.exec_time_ms,
                             info="通过" if is_ac else "答案错误",
+                            **testcase_stack_wm_api(
+                                normal_res.stack_watermark,
+                                self.config.get("stack_watermark"),
+                                self.fault_config,
+                            ),
                         )
                     )
                 except Exception as e:
@@ -168,17 +175,19 @@ class JudgeService:
                     )
                     continue
 
-                # 2.2) Fault injection + re-run
+                # 2.2) Fault injection + re-run（GDB）
+                injection_total += 1
                 try:
                     recovery_event.clear()
-                    # STM32F100 SRAM: 0x2000_0000 .. 0x2000_2000 (8K)
-                    addr = random.randint(0x20000000, 0x20002000 - 1)
+                    addr = random_sram_flip_address(self.fault_config)
                     bit = random.randint(0, 31)
 
                     injected_res = self._bare_runner.run_once(
                         artifacts.bin_path,
                         in_text,
                         logger=logger,
+                        firmware_elf_path=artifacts.elf_path,
+                        stack_watermark_cfg=self.config.get("stack_watermark"),
                         inject_error_addr=addr,
                         inject_error_bit=bit,
                         recovery_event=recovery_event,
@@ -187,30 +196,25 @@ class JudgeService:
                         uart_output_idle_sec=0.35,
                     )
 
-                    recovery_success = bool(injected_res.recovery_success)
-                    if recovery_success:
+                    is_ac = OJEngine.compare(expected, injected_res.actual_output)
+                    # 新定义：注入后 AC 即算恢复（不再强制 ERROR_RECOVERED）
+                    if is_ac:
                         successful_recoveries += 1
 
-                    if not recovery_success:
-                        test_cases.append(
-                            TestCaseResult(
-                                name=name,
-                                status="RE",
-                                time_ms=injected_res.exec_time_ms,
-                                info="故障后未恢复",
-                            )
+                    status = "AC" if is_ac else "WA"
+                    test_cases.append(
+                        TestCaseResult(
+                            name=name,
+                            status=status,
+                            time_ms=injected_res.exec_time_ms,
+                            info="通过" if is_ac else "答案错误",
+                            **testcase_stack_wm_api(
+                                injected_res.stack_watermark,
+                                self.config.get("stack_watermark"),
+                                self.fault_config,
+                            ),
                         )
-                    else:
-                        is_ac = OJEngine.compare(expected, injected_res.actual_output)
-                        status = "AC" if is_ac else "WA"
-                        test_cases.append(
-                            TestCaseResult(
-                                name=name,
-                                status=status,
-                                time_ms=injected_res.exec_time_ms,
-                                info="通过" if is_ac else "答案错误",
-                            )
-                        )
+                    )
                 except Exception as e:
                     run_status, info = self._classify_run_exception(e)
                     test_cases.append(
@@ -222,16 +226,19 @@ class JudgeService:
                         )
                     )
 
-            total_tests = len(test_cases)
-            survival_rate = (successful_recoveries / total_tests * 100.0) if total_tests else 0.0
+            total_tests = injection_total
+            survival_rate = (
+                (successful_recoveries / injection_total) if injection_total else 0.0
+            )
 
-            # overall_result 优先级：TLE > RE > WA > AC（沿用原 API 逻辑）
-            statuses = {tc.status for tc in test_cases}
+            # overall_result 优先级：TLE > RE > WA > AC（仅看无注入运行）
+            normal_statuses = [test_cases[i].status for i in range(0, len(test_cases), 2)]
+            statuses = set(normal_statuses)
             if "TLE" in statuses:
                 overall_result = "TLE"
             elif "RE" in statuses:
                 overall_result = "RE"
-            elif all(tc.status == "AC" for tc in test_cases) and test_cases:
+            elif all(s == "AC" for s in normal_statuses) and normal_statuses:
                 overall_result = "AC"
             else:
                 overall_result = "WA"
@@ -274,7 +281,6 @@ class JudgeService:
             self._connect_with_retry(connect_timeout_sec=90)
 
             test_cases: list[TestCaseResult] = []
-            successful_recoveries = 0
 
             try:
                 # 1) 上传代码 + 编译
@@ -297,19 +303,17 @@ class JudgeService:
                             )
                         ],
                         survival_rate=0.0,
-                        total_tests=1,
+                        total_tests=0,
                         successful_recoveries=0,
                     )
 
-                # 2) 正常 + 故障注入双测试流程
+                # 2) 普通 C 仅正常跑（GDB 位翻转仅裸机模式）
                 cases = OJEngine.get_test_cases(str(problem_dir))
-                total_cases = len(cases)
 
                 for i, case in enumerate(cases):
                     name = case["name"]
                     local_res = job_tmp_dir / f"res_{i}.out"
 
-                    # 2.1) 正常测试流程
                     try:
                         self.executor.upload_file(case["in_path"], "in.txt")
                         _, _, exec_time = self.executor.execute_timed(
@@ -343,58 +347,9 @@ class JudgeService:
                             )
                         )
 
-                    # 2.2) 故障注入测试流程（在 QEMU 中随机注入 bitflip）
-                    try:
-                        recovery_event.clear()
-                        self.inject_fault_memory_bitflip()
-
-                        self.executor.upload_file(case["in_path"], "in.txt")
-                        _, _, exec_time = self.executor.execute_timed(
-                            "./app < in.txt > out.txt", timeout=30
-                        )
-
-                        self.executor.download_file("out.txt", str(local_res))
-
-                        expected = self._read_text(Path(case["out_path"]))
-                        actual = self._read_text(local_res)
-                        is_ac = OJEngine.compare(expected, actual)
-
-                        recovery_success = recovery_event.is_set()
-                        if recovery_success:
-                            successful_recoveries += 1
-
-                        if not recovery_success:
-                            test_cases.append(
-                                TestCaseResult(
-                                    name=name,
-                                    status="RE",
-                                    time_ms=self._to_int_ms(exec_time),
-                                    info="故障后未恢复",
-                                )
-                            )
-                        else:
-                            status = "AC" if is_ac else "WA"
-                            test_cases.append(
-                                TestCaseResult(
-                                    name=name,
-                                    status=status,
-                                    time_ms=self._to_int_ms(exec_time),
-                                    info="通过" if is_ac else "答案错误",
-                                )
-                            )
-                    except Exception as e:
-                        run_status, info = self._classify_run_exception(e)
-                        test_cases.append(
-                            TestCaseResult(
-                                name=name,
-                                status=run_status,
-                                time_ms=None,
-                                info=info,
-                            )
-                        )
-
-                total_tests = len(test_cases)
-                survival_rate = (successful_recoveries / total_tests * 100.0) if total_tests else 0.0
+                total_tests = 0
+                survival_rate = 0.0
+                successful_recoveries = 0
 
                 # overall_result 优先级：TLE > RE > WA > AC
                 statuses = {tc.status for tc in test_cases}
@@ -402,7 +357,7 @@ class JudgeService:
                     overall_result = "TLE"
                 elif "RE" in statuses:
                     overall_result = "RE"
-                elif all(tc.status == "AC" for tc in test_cases):
+                elif all(tc.status == "AC" for tc in test_cases) and test_cases:
                     overall_result = "AC"
                 else:
                     overall_result = "WA"
@@ -419,4 +374,3 @@ class JudgeService:
                     self.executor.close()
                 except Exception:
                     pass
-
