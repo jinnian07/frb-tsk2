@@ -60,12 +60,14 @@ class QemuOJApp:
         ttk.Label(toolbar, text="评测模式:").pack(side=tk.LEFT, padx=5)
         self.mode_combo = ttk.Combobox(
             toolbar,
-            values=["普通 C", "裸机 Cortex-M UART"],
+            values=["普通 C", "裸机 Cortex-M UART", "双环境 Python 评测"],
             state="readonly",
-            width=18,
+            width=22,
         )
         self.mode_combo.set("普通 C")
         self.mode_combo.pack(side=tk.LEFT, padx=5)
+        self._last_judge_mode = self.mode_combo.get()
+        self.mode_combo.bind("<<ComboboxSelected>>", self.on_judge_mode_changed)
         
         self.btn_judge = ttk.Button(toolbar, text="▶ 提交评测", command=self.start_judge_thread)
         self.btn_judge.pack(side=tk.LEFT, padx=5)
@@ -137,6 +139,36 @@ class QemuOJApp:
             self.log(f"已扫描到 {len(problems)} 个题目")
         else:
             self.log("未找到任何题目目录")
+
+    def on_judge_mode_changed(self, _evt=None):
+        mode = self.mode_combo.get()
+        prev = self._last_judge_mode
+        self._last_judge_mode = mode
+        if "双环境" in mode:
+            self._refresh_dual_result_table()
+            self.log(
+                "【双环境评测】编辑器请使用 Python（stdin/stdout OJ）；"
+                "测例：dual_eval/data/default_tests.json；"
+                "「提交评测」将 subprocess 隔离跑 sim/hw，并汇总差异率、时序抖动、.map 资源、跨平台通过占比。"
+            )
+        elif prev and "双环境" in prev:
+            self.load_problem()
+
+    def _refresh_dual_result_table(self):
+        try:
+            from dual_eval import config as de_config
+
+            cases = de_config.load_default_tests()
+        except Exception:
+            cases = []
+        self.res_table.delete(*self.res_table.get_children())
+        for tc in cases:
+            name = tc.get("name", "?") if isinstance(tc, dict) else "?"
+            self.res_table.insert("", "end", values=(name, "待测", "-", "-"))
+
+    def _update_result_row_only(self, name, status, time_val=None, info=None):
+        """仅更新结果表，不累计异常注入生存率统计。"""
+        self.root.after(0, lambda: self._do_update(name, status, time_val, info))
 
     def load_problem(self):
         try:
@@ -210,6 +242,13 @@ class QemuOJApp:
     def start_static_check_thread(self):
         if self.judge_running:
             messagebox.showwarning("提示", "评测进行中，请结束后重试")
+            return
+        if "双环境" in self.mode_combo.get():
+            messagebox.showinfo(
+                "提示",
+                "当前为「双环境 Python 评测」模式；静态检查针对嵌入式 C。\n"
+                "请切换到「普通 C」或「裸机 Cortex-M UART」后再试。",
+            )
             return
         threading.Thread(target=self.run_static_check, daemon=True).start()
 
@@ -606,8 +645,114 @@ class QemuOJApp:
         self.btn_judge.config(state="disabled")
         self.btn_stop.config(state="normal")
         mode = self.mode_combo.get() if hasattr(self, "mode_combo") else "普通 C"
-        target = self.run_judge_baremetal_uart if "裸机" in mode else self.run_judge
+        if "双环境" in mode:
+            target = self.run_judge_dual_env
+        elif "裸机" in mode:
+            target = self.run_judge_baremetal_uart
+        else:
+            target = self.run_judge
         threading.Thread(target=target, daemon=True).start()
+
+    def run_judge_dual_env(self):
+        """双环境动态评测：与 dual_eval 核心一致，内嵌于主界面无需另启 API。"""
+        try:
+            from dual_eval import config as de_config
+            from dual_eval.backend.dual_runner import evaluate_dual_environment
+            from dual_eval import integration as de_integ
+        except ImportError as e:
+            def _err(msg=str(e)):
+                messagebox.showerror("错误", f"无法加载 dual_eval 模块：{msg}")
+
+            self.root.after(0, _err)
+            self.judge_running = False
+            self.root.after(0, lambda: self.btn_judge.config(state="normal"))
+            self.root.after(0, lambda: self.btn_stop.config(state="disabled"))
+            return
+
+        task2_root = Path(__file__).resolve().parent
+        code = self.editor.get("1.0", tk.END)
+
+        def finish_buttons():
+            self.judge_running = False
+            self.btn_judge.config(state="normal")
+            self.btn_stop.config(state="disabled")
+
+        if not code.strip():
+            self.log("双环境评测：代码为空")
+            self.root.after(0, lambda: messagebox.showwarning("提示", "请先输入 Python 代码"))
+            self.root.after(0, finish_buttons)
+            return
+
+        try:
+            self.log("=== 双环境动态评测（subprocess sim + hw）===")
+            cases = de_config.load_default_tests()
+            if not cases:
+                self.log("未找到测例，请检查 dual_eval/data/default_tests.json")
+                self.root.after(
+                    0,
+                    lambda: messagebox.showerror("错误", "无测例：dual_eval/data/default_tests.json"),
+                )
+                self.root.after(0, finish_buttons)
+                return
+
+            self._refresh_dual_result_table()
+            for item in self.res_table.get_children():
+                vals = list(self.res_table.item(item, "values"))
+                if vals:
+                    vals[1] = "运行中"
+                    self.res_table.item(item, values=tuple(vals))
+
+            summary = evaluate_dual_environment(
+                code,
+                cases,
+                project_root=task2_root,
+                time_limit_sec=3.0,
+                output_abs_threshold=1e-5,
+                timing_jitter_threshold_ms=500.0,
+                demo_hw_numeric_perturb=True,
+            )
+
+            for c in summary.cases:
+                info = f"sim={c.sim_verdict} hw={c.hw_verdict}"
+                info += " 仿真/硬件输出不一致" if c.sim_hw_output_diff else " 输出比对一致"
+                self._update_result_row_only(
+                    c.name,
+                    c.judge_verdict,
+                    f"{c.timing_jitter_ms:.2f}",
+                    info,
+                )
+
+            self.log(f"总体判定: {summary.overall_judge}")
+            self.log(
+                f"仿真-硬件输出差异率: {summary.sim_hw_diff_rate_percent}% "
+                f"（阈值见 output_abs_threshold）"
+            )
+            self.log(
+                f"时序抖动 ΔT=|T_sim-T_hw| 平均: {summary.avg_timing_jitter_ms:.3f} ms；"
+                f"超阈值测例数: {summary.timing_jitter_over_threshold_cases}"
+            )
+
+            self.log("--- 资源占用偏差（示例 .map）---")
+            try:
+                map_rep = de_integ.sample_map_resource_report(task2_root)
+                self.log(json.dumps(map_rep, ensure_ascii=False, indent=2))
+            except Exception as ex:
+                self.log(f".map 解析失败: {ex}")
+
+            self.log("--- 跨平台兼容性通过率（多环境变量子进程）---")
+            try:
+                xp = de_integ.cross_platform_report(code, task2_root, time_limit_sec=3.0)
+                self.log(json.dumps(xp, ensure_ascii=False, indent=2))
+            except Exception as ex:
+                self.log(f"跨平台统计失败: {ex}")
+
+            self.log("=== 双环境评测结束 ===")
+
+        except Exception as e:
+            self.log(f"双环境评测异常: {e}")
+            self.root.after(0, lambda: messagebox.showerror("错误", str(e)))
+        finally:
+            self.root.after(0, finish_buttons)
 
     def stop_judge(self):
         if self.executor:
