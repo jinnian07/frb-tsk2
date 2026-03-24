@@ -1,4 +1,4 @@
-import subprocess
+﻿import subprocess
 import threading
 import time
 import win32gui
@@ -7,8 +7,8 @@ import os
 from typing import Callable, Optional
 from pathlib import Path
 
-from core.fault_injection_config import gdb_command_for_subprocess
-from core.gdb_memory_inject import gdb_memory_bitflip
+from judger.core.fault_injection_config import gdb_command_for_subprocess
+from judger.core.gdb_memory_inject import gdb_memory_bitflip
 
 
 def _pick_free_tcp_port() -> int:

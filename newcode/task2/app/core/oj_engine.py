@@ -1,4 +1,3 @@
-from core.oj_engine import OJEngine
+from judger.core.oj_engine import OJEngine
 
 __all__ = ["OJEngine"]
-

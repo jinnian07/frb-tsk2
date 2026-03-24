@@ -1,4 +1,4 @@
-"""
+﻿"""
 嵌入式 C（Cortex-M / freestanding）静态分析辅助：为 clang-tidy 构造与 baremetal 构建一致的编译参数。
 """
 from __future__ import annotations

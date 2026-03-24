@@ -1,4 +1,4 @@
-"""
+﻿"""
 通过 arm-none-eabi-gdb + QEMU gdbstub 对目标 RAM 做 32 位字异或位翻转。
 连接时目标会短暂停住；改完后 detach，QEMU 继续运行。
 """

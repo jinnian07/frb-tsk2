@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import re
 import socket
@@ -8,9 +8,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict, Optional
 
-from core.fault_injection_config import gdb_command_for_subprocess, inject_after_uart_input
-from core.qemu_manager import QemuManager
-from core.stack_watermark import (
+from judger.core.fault_injection_config import gdb_command_for_subprocess, inject_after_uart_input
+from judger.core.qemu_manager import QemuManager
+from judger.core.stack_watermark import (
     collect_stack_watermark,
     enrich_stack_watermark_result,
     format_watermark_summary,

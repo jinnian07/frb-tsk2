@@ -1,4 +1,4 @@
-"""
+﻿"""
 课堂级嵌入式代码覆盖率（宿主近似）：GCC --coverage + gcov。
 
 裸机 QEMU 下无可靠文件系统写 .gcda，故在 Windows/Linux 上用宿主 gcc 编译
@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
-from core.baremetal_uart_runner import _normalize_uart_input
+from judger.core.baremetal_uart_runner import _normalize_uart_input
 
 
 def _strip_main_function(source: str) -> Optional[str]:
@@ -310,10 +310,10 @@ def run_embedded_host_coverage(
 
 def self_check(task2_root: Optional[Path] = None) -> Dict[str, Any]:
     """供命令行自检：对 P0002/std.c 跑一轮最小覆盖率。"""
-    root = task2_root or Path(__file__).resolve().parent.parent
+    root = task2_root or Path(__file__).resolve().parents[2]
     std = root / "P0002" / "std.c"
     text = std.read_text(encoding="utf-8")
-    from core.baremetal_code_prep import prepare_baremetal_uart_code
+    from judger.core.baremetal_code_prep import prepare_baremetal_uart_code
 
     prep = prepare_baremetal_uart_code(text)
     data = root / "P0002" / "data"

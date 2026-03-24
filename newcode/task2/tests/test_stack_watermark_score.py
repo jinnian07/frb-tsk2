@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import unittest
 
-from core.stack_watermark import (
+from judger.core.stack_watermark import (
     format_stack_watermark_composite_log_line,
     merge_stack_watermark_config,
     score_stack_watermark,

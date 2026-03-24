@@ -1,4 +1,4 @@
-# core/project_manager.py
+﻿# core/project_manager.py
 import os
 import shutil
 

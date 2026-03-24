@@ -1,4 +1,4 @@
-"""
+﻿"""
 堆栈水位线：固件在启动时将 [_ebss,_estack) 染成 0xDEADBEEF；UART 采集结束后、终止 QEMU 前，
 通过标准 arm-none-eabi-gdb + QEMU gdbstub interrupt + dump binary memory 读 SRAM 并扫描。
 
@@ -17,7 +17,7 @@ import tempfile
 from pathlib import Path
 from typing import Any, Dict, Literal, Optional, Tuple
 
-from core.fault_injection_config import gdb_command_for_subprocess
+from judger.core.fault_injection_config import gdb_command_for_subprocess
 
 # 与 baremetal/startup_stm32vldiscovery.c 中 OJ_STACK_PAINT_U32 一致
 OJ_STACK_PAINT_U32 = 0xDEADBEEF

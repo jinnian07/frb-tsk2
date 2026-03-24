@@ -10,25 +10,25 @@ import subprocess
 import random  # 新增随机数模块
 from pathlib import Path
 
-from core.oj_engine import OJEngine
-from core.baremetal_builder import BareMetalBuilder
-from core.baremetal_code_prep import prepare_baremetal_uart_code
-from core.baremetal_uart_runner import BareMetalUartRunner
-from core.ssh_executor import SSHExecutor
-from core.qemu_manager import QemuManager
-from core.config import load_config, scan_problems
-from core.fault_injection_config import (
+from judger.core.oj_engine import OJEngine
+from judger.core.baremetal_builder import BareMetalBuilder
+from judger.core.baremetal_code_prep import prepare_baremetal_uart_code
+from judger.core.baremetal_uart_runner import BareMetalUartRunner
+from judger.core.ssh_executor import SSHExecutor
+from judger.core.qemu_manager import QemuManager
+from judger.core.config import load_config, scan_problems
+from judger.core.fault_injection_config import (
     load_fault_injection_config,
     random_sram_flip_address,
 )
-from core.stack_watermark import (
+from judger.core.stack_watermark import (
     format_stack_watermark_composite_log_line,
     format_watermark_summary,
 )
 from ui.components import OJComponents
 from ui.md_viewer import MDViewer
-from core.project_manager import create_user_project
-from core.static_analysis import build_clang_tidy_command
+from judger.core.project_manager import create_user_project
+from judger.core.static_analysis import build_clang_tidy_command
 
 class QemuOJApp:
     def __init__(self):
@@ -551,7 +551,7 @@ class QemuOJApp:
         task2_dir = Path(__file__).resolve().parent
         in_paths = [(task2_dir / c["in_path"]).resolve() for c in cases]
         try:
-            from core.coverage_embedded import run_embedded_host_coverage
+            from judger.core.coverage_embedded import run_embedded_host_coverage
 
             res = run_embedded_host_coverage(
                 prepared_user_c=prepared_code,

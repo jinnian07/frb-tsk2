@@ -1,4 +1,4 @@
-"""
+﻿"""
 独立配置：GDB 位翻转故障注入（不修改 config.json 语义）。
 缺省文件时使用 DEFAULT_FAULT_INJECTION_CONFIG。
 
@@ -84,7 +84,7 @@ def load_fault_injection_config(
     filename: str = "fault_injection_config.json",
 ) -> Dict[str, Any]:
     cfg = deepcopy(DEFAULT_FAULT_INJECTION_CONFIG)
-    root = task2_root or Path(__file__).resolve().parent.parent
+    root = task2_root or Path(__file__).resolve().parents[2]
     path = root / filename
     if not path.is_file():
         return cfg

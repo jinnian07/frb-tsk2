@@ -69,7 +69,7 @@ curl -X POST "http://localhost:8000/api/v1/judge" -H "Content-Type: application/
 - **命令行自检**（在 `task2/` 下）：
 
 ```bash
-python -c "from core.coverage_embedded import self_check; print(self_check())"
+python -c "from judger.core.coverage_embedded import self_check; print(self_check())"
 ```
 
 ## 目录映射表（原 `core/` → FastAPI）

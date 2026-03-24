@@ -1,4 +1,3 @@
-from core.qemu_manager import QemuManager
+from judger.core.qemu_manager import QemuManager
 
 __all__ = ["QemuManager"]
-

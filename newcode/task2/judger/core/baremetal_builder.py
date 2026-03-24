@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import os
 import subprocess
@@ -29,7 +29,7 @@ class BareMetalBuilder:
         toolchain_prefix: str = "arm-none-eabi",
         runtime_dir: Optional[Path] = None,
     ):
-        task2_root = Path(__file__).resolve().parents[1]
+        task2_root = Path(__file__).resolve().parents[2]
         self.runtime_dir = runtime_dir or (task2_root / "baremetal")
 
         self.gcc = f"{toolchain_prefix}-gcc"
