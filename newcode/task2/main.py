@@ -1,6 +1,6 @@
 import ctypes
 import tkinter as tk
-from typing import Optional
+from typing import List, Optional
 from tkinter import ttk, messagebox
 import threading
 import os
@@ -21,10 +21,16 @@ from judger.core.fault_injection_config import (
     load_fault_injection_config,
     random_sram_flip_address,
 )
+from judger.core.map_resource_usage import (
+    RESOURCE_USAGE_LOG_PREFIX,
+    analyze_map_usage,
+    format_resource_usage_summary,
+)
 from judger.core.stack_watermark import (
     format_stack_watermark_composite_log_line,
     format_watermark_summary,
 )
+
 from ui.components import OJComponents
 from ui.md_viewer import MDViewer
 from judger.core.project_manager import create_user_project
@@ -111,7 +117,6 @@ class QemuOJApp:
         self.editor.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         ttk.Button(toolbar, text="💾 保存代码", command=self.save_code).pack(side=tk.LEFT, padx=5)
-        ttk.Button(toolbar, text="🔍 静态检查", command=self.start_static_check_thread).pack(side=tk.LEFT, padx=5)
 
         self.root.after(200, self.load_problem)
 
@@ -217,48 +222,50 @@ class QemuOJApp:
         else:
             messagebox.showwarning("警告", "请先选择题目！")
 
-    def start_static_check_thread(self):
-        if self.judge_running:
-            messagebox.showwarning("提示", "评测进行中，请结束后重试")
-            return
-        threading.Thread(target=self.run_static_check, daemon=True).start()
+    def _flush_log_lines_on_main_thread(self, lines: List[str]) -> None:
+        """Worker thread schedules batched log writes; blocks until the main loop runs them."""
+        done = threading.Event()
 
-    def run_static_check(self):
-        user_code = self.editor.get("1.0", tk.END)
-        if not user_code.strip():
-            self.root.after(0, lambda: self.log("静态检查：代码为空，跳过"))
-            return
+        def _do():
+            for line in lines:
+                self.log(line)
+            done.set()
 
+        self.root.after(0, _do)
+        done.wait(timeout=120.0)
+
+    def _perform_static_check_after_judge(self, user_code: str) -> None:
+        """
+        clang-tidy 在评测工作线程内执行；日志通过主线程写入，整块排在当次评测日志之后。
+        空代码：跳过 clang-tidy，仍输出简短说明（评测已在此前完成）。
+        合并流程中不弹静态检查相关 messagebox，结论只看日志。
+        """
         task2_dir = Path(__file__).resolve().parent
-        temp_c_path = task2_dir / "temp_static_check.c"
+        lines: List[str] = ["======== 静态检查 ========"]
 
+        if not user_code.strip():
+            lines.append("静态检查：代码为空，跳过 clang-tidy")
+            lines.append("======== 静态检查结束 ========")
+            self._flush_log_lines_on_main_thread(lines)
+            return
+
+        temp_c_path = task2_dir / "temp_static_check.c"
         try:
             temp_c_path.write_text(user_code, encoding="utf-8")
         except OSError as e:
-
-            def _write_err(msg=str(e)):
-                self.log(f"静态检查：无法写入临时文件: {msg}")
-
-            self.root.after(0, _write_err)
+            lines.append(f"静态检查：无法写入临时文件: {e}")
+            lines.append("======== 静态检查结束 ========")
+            self._flush_log_lines_on_main_thread(lines)
             return
 
-        def _log_start():
-            self.log("开始静态检查（嵌入式 C：arm-none-eabi / freestanding / Cortex-M3）...")
-
-        self.root.after(0, _log_start)
+        lines.append("开始静态检查（嵌入式 C：arm-none-eabi / freestanding / Cortex-M3）...")
 
         try:
             cmd, notes = build_clang_tidy_command(
                 source_file=temp_c_path,
                 task2_dir=task2_dir,
             )
-            for line in notes:
-
-                def _note(m=line):
-                    self.log(m)
-
-                self.root.after(0, _note)
-
+            lines.extend(notes)
             result = subprocess.run(
                 cmd,
                 capture_output=True,
@@ -267,53 +274,25 @@ class QemuOJApp:
                 cwd=str(task2_dir),
             )
             output = (result.stdout or "") + (result.stderr or "")
-            lowered = output.lower()
-            has_diag = (
-                result.returncode != 0
-                or "warning:" in lowered
-                or "error:" in lowered
-            )
-
-            def _finish():
-                self.log("静态检查完成")
-                self.log(output)
-                if has_diag:
-                    messagebox.showinfo(
-                        "静态检查结果",
-                        "发现潜在问题或工具告警，详见日志",
-                    )
-                else:
-                    messagebox.showinfo("静态检查结果", "✅ 未发现明显问题")
-
-            self.root.after(0, _finish)
+            lines.append("静态检查完成")
+            lines.append(output.rstrip() if output.strip() else "(clang-tidy 无 stdout/stderr 输出)")
         except FileNotFoundError:
-            def _no_clang_tidy():
-                self.log(
-                    "静态检查失败：未找到 clang-tidy，请安装 LLVM 并将 clang-tidy 加入 PATH"
-                )
-                messagebox.showerror("错误", "未找到 clang-tidy（请安装 LLVM）")
-
-            self.root.after(0, _no_clang_tidy)
+            lines.append(
+                "静态检查失败：未找到 clang-tidy，请安装 LLVM 并将 clang-tidy 加入 PATH"
+            )
         except subprocess.TimeoutExpired:
-
-            def _timeout():
-                self.log("静态检查超时（>120s），已终止")
-                messagebox.showerror("错误", "静态检查超时")
-
-            self.root.after(0, _timeout)
+            lines.append("静态检查超时（>120s），已终止")
         except Exception as e:
-
-            def _err(msg=str(e)):
-                self.log(f"静态检查失败：{msg}")
-                messagebox.showerror("错误", f"静态检查失败：{msg}")
-
-            self.root.after(0, _err)
+            lines.append(f"静态检查失败：{e}")
         finally:
             try:
                 if temp_c_path.is_file():
                     temp_c_path.unlink()
             except OSError:
                 pass
+
+        lines.append("======== 静态检查结束 ========")
+        self._flush_log_lines_on_main_thread(lines)
 
     def run_judge(self):
         try:
@@ -394,10 +373,6 @@ class QemuOJApp:
         except Exception as e:
             self.log(f"评测错误: {str(e)}")
             messagebox.showerror("错误", str(e))
-        finally:
-            self.judge_running = False
-            self.root.after(0, lambda: self.btn_judge.config(state="normal"))
-            self.root.after(0, lambda: self.btn_stop.config(state="disabled"))
 
     def run_judge_baremetal_uart(self):
         """
@@ -426,6 +401,34 @@ class QemuOJApp:
 
             self.log("交叉编译固件中...")
             artifacts = self.bare_builder.build(Path(local_main_c), Path(job_tmp_dir) / "firmware")
+
+            resource_usage_log_line: Optional[str] = None
+            try:
+                mp = artifacts.map_path
+                if mp is not None and mp.is_file():
+                    report = analyze_map_usage(
+                        mp,
+                        linker_script=self.bare_builder.linker_script,
+                    )
+                    report = dict(report)
+                    report["sections"] = []
+                    resource_usage_log_line = (
+                        f"{RESOURCE_USAGE_LOG_PREFIX}"
+                        f"{format_resource_usage_summary(report)}"
+                    )
+                else:
+                    resource_usage_log_line = (
+                        f"{RESOURCE_USAGE_LOG_PREFIX}未找到 firmware.map，跳过解析"
+                    )
+            except Exception as e:
+                resource_usage_log_line = (
+                    f"{RESOURCE_USAGE_LOG_PREFIX}解析失败（{e!s}）"
+                )
+
+            self.log(
+                resource_usage_log_line
+                or f"{RESOURCE_USAGE_LOG_PREFIX}资源占用未解析"
+            )
 
             cases = OJEngine.get_test_cases(self.current_problem)
             ac_count = 0
@@ -531,6 +534,10 @@ class QemuOJApp:
             self.log(f"正常通过: {ac_count}/{len(cases)}")
             self.calculate_survival_rate()
             self.log(format_stack_watermark_composite_log_line(normal_stack_scores))
+            self.log(
+                resource_usage_log_line
+                or f"{RESOURCE_USAGE_LOG_PREFIX}资源占用未解析"
+            )
 
             if self.config.get("enable_coverage_embedded", False):
                 self._run_embedded_coverage_host(
@@ -541,10 +548,6 @@ class QemuOJApp:
         except Exception as e:
             self.log(f"裸机评测错误: {str(e)}")
             messagebox.showerror("错误", str(e))
-        finally:
-            self.judge_running = False
-            self.root.after(0, lambda: self.btn_judge.config(state="normal"))
-            self.root.after(0, lambda: self.btn_stop.config(state="disabled"))
 
     def _run_embedded_coverage_host(self, prepared_code: str, cases: list) -> None:
         """课堂级 gcov：宿主 gcc 近似（不参与 AC/WA）。仅在裸机评测成功后调用。"""
@@ -584,6 +587,21 @@ class QemuOJApp:
             f"注入后 AC / 注入总次数）"
         )
 
+    def _judge_worker(self, baremetal_uart: bool) -> None:
+        user_code = self.editor.get("1.0", tk.END)
+        try:
+            if baremetal_uart:
+                self.run_judge_baremetal_uart()
+            else:
+                self.run_judge()
+        finally:
+            try:
+                self._perform_static_check_after_judge(user_code)
+            finally:
+                self.judge_running = False
+                self.root.after(0, lambda: self.btn_judge.config(state="normal"))
+                self.root.after(0, lambda: self.btn_stop.config(state="disabled"))
+
     def start_judge_thread(self):
         if self.judge_running:
             messagebox.showwarning("提示", "评测进行中...")
@@ -594,8 +612,8 @@ class QemuOJApp:
         self.btn_judge.config(state="disabled")
         self.btn_stop.config(state="normal")
         mode = self.mode_combo.get() if hasattr(self, "mode_combo") else "普通 C"
-        target = self.run_judge_baremetal_uart if "裸机" in mode else self.run_judge
-        threading.Thread(target=target, daemon=True).start()
+        bare = "裸机" in mode
+        threading.Thread(target=self._judge_worker, args=(bare,), daemon=True).start()
 
     def stop_judge(self):
         if self.executor:
@@ -607,7 +625,6 @@ class QemuOJApp:
             except Exception:
                 pass
         self.judge_running = False
-        self.btn_judge.config(state="normal")
         self.btn_stop.config(state="disabled")
 
     def run(self):

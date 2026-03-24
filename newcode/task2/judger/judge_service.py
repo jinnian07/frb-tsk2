@@ -1,10 +1,11 @@
+import logging
 import random
 import threading
 import time
 import uuid
 from collections import deque
 from pathlib import Path
-from typing import Callable, Deque, Optional, Tuple
+from typing import Any, Callable, Deque, Optional, Tuple
 
 from judger.core.baremetal_builder import BareMetalBuilder
 from judger.core.baremetal_code_prep import prepare_baremetal_uart_code
@@ -14,12 +15,19 @@ from judger.core.oj_engine import OJEngine
 from judger.core.qemu_manager import QemuManager
 from judger.core.fault_injection_config import load_fault_injection_config, random_sram_flip_address
 from judger.core.ssh_executor import SSHExecutor
+from judger.core.map_resource_usage import (
+    RESOURCE_USAGE_LOG_PREFIX,
+    analyze_map_usage,
+    format_resource_usage_summary,
+)
 from judger.core.stack_watermark import testcase_stack_wm_api
 
 from judger.schemas import (
     JudgeResponse,
     TestCaseResult,
 )
+
+_LOG = logging.getLogger(__name__)
 
 
 class JudgeService:
@@ -127,6 +135,43 @@ class JudgeService:
                     total_tests=0,
                     successful_recoveries=0,
                 )
+
+            resource_usage: Optional[dict[str, Any]] = None
+            resource_usage_summary: Optional[str] = None
+            resource_usage_skip: Optional[str] = None
+            try:
+                mp = artifacts.map_path
+                if mp is None or not mp.is_file():
+                    resource_usage_skip = "未找到 firmware.map，跳过解析"
+                else:
+                    report = analyze_map_usage(
+                        mp,
+                        linker_script=self._bare_builder.linker_script,
+                    )
+                    report = dict(report)
+                    report["sections"] = []
+                    resource_usage = report
+                    resource_usage_summary = format_resource_usage_summary(report)
+            except Exception as e:
+                resource_usage_skip = f"解析失败：{e!s}"[:500]
+
+            if resource_usage_summary:
+                _LOG.info("%s%s", RESOURCE_USAGE_LOG_PREFIX, resource_usage_summary)
+                if resource_usage:
+                    flash_s = resource_usage["sections_summary_bytes"]["flash"]
+                    ram_s = resource_usage["sections_summary_bytes"]["ram"]
+                    lim = resource_usage["limits"]
+                    _LOG.debug(
+                        "resource_usage detail: limits.source=%s "
+                        "flash_used=%s flash_limit=%s ram_used=%s ram_limit=%s",
+                        lim.get("source"),
+                        flash_s.get("total_used"),
+                        lim.get("flash_bytes"),
+                        ram_s.get("total_used"),
+                        lim.get("ram_bytes"),
+                    )
+            elif resource_usage_skip:
+                _LOG.info("%s%s", RESOURCE_USAGE_LOG_PREFIX, resource_usage_skip)
 
             cases = OJEngine.get_test_cases(str(problem_dir))
             test_cases: list[TestCaseResult] = []
@@ -251,6 +296,8 @@ class JudgeService:
                 survival_rate=survival_rate,
                 total_tests=total_tests,
                 successful_recoveries=successful_recoveries,
+                resource_usage_summary=resource_usage_summary,
+                resource_usage=resource_usage,
             )
         finally:
             try:

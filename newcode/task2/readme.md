@@ -40,13 +40,17 @@ curl -X POST "http://localhost:8000/api/v1/judge" -H "Content-Type: application/
   ],
   "survival_rate": 85.5,
   "total_tests": 4,
-  "successful_recoveries": 3
+  "successful_recoveries": 3,
+  "resource_usage_summary": "FLASH占用率 0.60% (784/131072 bytes); RAM占用率 12.34% (1012/8192 bytes)",
+  "resource_usage": { "limits": { "source": "linker_script", "flash_bytes": 131072, "ram_bytes": 8192 } }
 }
 ```
 
+裸机模式 `judge_mode=cortexm_baremetal_uart` 且编译成功时，`resource_usage_summary` / `resource_usage` 由 `firmware.map` 解析得到（静态估算，无运行时栈深）；普通 C 模式或未解析成功时二者为 `null`。
+
 ## GUI 静态检查（嵌入式 C）
 
-工具栏「静态检查」对**编辑器中的代码**运行 `clang-tidy`，编译参数与裸机固件一致（`-target arm-none-eabi`、`--config-file task2/.clang-tidy`、`-mcpu=cortex-m3`、`-ffreestanding`、`-I baremetal` 等）。
+点击工具栏「提交评测」时，先完成与普通 C / 裸机一致的评测流程；结束后对**编辑器中的代码**自动运行 `clang-tidy`，**静态检查整块结果写在当次运行日志末尾**。编译参数与裸机固件一致（`-target arm-none-eabi`、`--config-file task2/.clang-tidy`、`-mcpu=cortex-m3`、`-ffreestanding`、`-I baremetal` 等）。
 
 **依赖：**
 
@@ -71,6 +75,38 @@ curl -X POST "http://localhost:8000/api/v1/judge" -H "Content-Type: application/
 ```bash
 python -c "from judger.core.coverage_embedded import self_check; print(self_check())"
 ```
+
+## 资源占用偏差（GNU ld .map）
+
+- 目标：从 `.map` 提取 Flash/RAM 占用并计算 `used/limit` 百分比。
+- 脚本：`judger/core/map_resource_usage.py`（可独立运行）。
+- 输入：
+  - `--map`：GNU ld map 文件（必填）
+  - `--linker-script`：可选，从 `MEMORY {}` 读取 `FLASH/RAM` 限制
+  - `--limits-json`：可选，JSON 覆盖限制（`flash_bytes`、`ram_bytes`）
+- 输出：一行人类可读摘要 + JSON（可用 `--json-out` 落盘）
+
+示例：
+
+```bash
+cd task2
+python -m judger.core.map_resource_usage \
+  --map .temp/job_xxx/firmware/firmware.map \
+  --linker-script baremetal/linker_stm32vldiscovery.ld \
+  --json-out .temp/job_xxx/firmware/resource_usage.json \
+  --no-sections
+```
+
+分类口径（静态）：
+
+- Flash：`.text/.isr_vector` 归代码，`.rodata/.ARM.extab/.ARM.exidx` 归只读数据，`.data` 的 LMA 计入 Flash。
+- RAM：`.data`（VMA 在 RAM）、`.bss`、`NOLOAD` 和其他 RAM 段计入 RAM 占用。
+- 栈/堆：仅基于 map 符号静态推断（例如 `_estack`、`_ebss`、`__heap_base`），不能代表运行时峰值。
+
+限制说明：
+
+- 仅靠 `.map` 无法得到运行时真实栈深和真实堆用量，输出中会标记为静态估算。
+- 若 map 缺少 `Memory Configuration` 或符号，脚本仍会输出 JSON，但对应字段可能为 `null/unknown`。
 
 ## 目录映射表（原 `core/` → FastAPI）
 | 原文件路径（task2/core/） | FastAPI 模块（task2/app/） |

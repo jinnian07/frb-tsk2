@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -32,4 +32,12 @@ class JudgeResponse(BaseModel):
     )
     total_tests: int = Field(description="故障注入试验次数（分母）；普通 C 为 0")
     successful_recoveries: int = Field(description="注入后 AC 的次数（分子）")
+    resource_usage_summary: Optional[str] = Field(
+        default=None,
+        description="裸机：.map 静态 Flash/RAM 占用一行摘要；普通 C 或未解析时为 None",
+    )
+    resource_usage: Optional[dict[str, Any]] = Field(
+        default=None,
+        description="裸机：资源占用 JSON（无 per-section 列表）；普通 C 或未解析时为 None",
+    )
 

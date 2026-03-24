@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import os
 import subprocess
@@ -11,6 +11,7 @@ from typing import Optional
 class BareMetalArtifacts:
     elf_path: Path
     bin_path: Path
+    map_path: Optional[Path] = None
 
 
 class BareMetalBuilder:
@@ -56,6 +57,7 @@ class BareMetalBuilder:
 
         elf_path = out_dir / "firmware.elf"
         bin_path = out_dir / "firmware.bin"
+        map_path = out_dir / "firmware.map"
 
         # Note:
         # - QEMU's stm32vldiscovery sets SYSCLK to 24MHz, Cortex-M3 core.
@@ -81,9 +83,10 @@ class BareMetalBuilder:
 
         ldflags = [
             "-T",
-            str(self.linker_script),
+            str(self.linker_script.resolve()),
             "-Wl,--entry=Reset_Handler",
             "-Wl,--gc-sections",
+            f"-Wl,-Map={str(map_path.resolve())}",
             # newlib-nano is usually preferred; nosys specs provides stubs besides ours
             "-specs=nosys.specs",
         ]
@@ -94,9 +97,9 @@ class BareMetalBuilder:
             str(main_c_path_abs),
             str(self.startup_c.resolve()),
             str(self.vector_asm_s.resolve()),
-            str(self.uart_c),
+            str(self.uart_c.resolve()),
             str(self.uart_poll_c.resolve()),
-            str(self.syscalls_c),
+            str(self.syscalls_c.resolve()),
             *extra_cflags,
             *ldflags,
             "-o",
@@ -118,5 +121,5 @@ class BareMetalBuilder:
         ]
         subprocess.run(objcopy_cmd, check=True, cwd=str(out_dir_abs), env=env)
 
-        return BareMetalArtifacts(elf_path=elf_path, bin_path=bin_path)
+        return BareMetalArtifacts(elf_path=elf_path, bin_path=bin_path, map_path=map_path)
 
