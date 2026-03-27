@@ -1,6 +1,6 @@
 import ctypes
 import tkinter as tk
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from tkinter import ttk, messagebox
 import threading
 import os
@@ -35,6 +35,10 @@ from ui.components import OJComponents
 from ui.md_viewer import MDViewer
 from judger.core.project_manager import create_user_project
 from judger.core.static_analysis import build_clang_tidy_command
+from judger.core.final_score import (
+    compute_baremetal_final_score,
+    format_final_score_log_lines,
+)
 
 class QemuOJApp:
     def __init__(self):
@@ -234,20 +238,23 @@ class QemuOJApp:
         self.root.after(0, _do)
         done.wait(timeout=120.0)
 
-    def _perform_static_check_after_judge(self, user_code: str) -> None:
+    def _perform_static_check_after_judge(self, user_code: str) -> Tuple[bool, str]:
         """
         clang-tidy 在评测工作线程内执行；日志通过主线程写入，整块排在当次评测日志之后。
         空代码：跳过 clang-tidy，仍输出简短说明（评测已在此前完成）。
         合并流程中不弹静态检查相关 messagebox，结论只看日志。
+        返回 (是否按 clang-tidy 输出计静态分, 原始 stdout+stderr 供解析)；未正常完成时第二项为空串。
         """
         task2_dir = Path(__file__).resolve().parent
         lines: List[str] = ["======== 静态检查 ========"]
+        static_eligible = False
+        static_output = ""
 
         if not user_code.strip():
             lines.append("静态检查：代码为空，跳过 clang-tidy")
             lines.append("======== 静态检查结束 ========")
             self._flush_log_lines_on_main_thread(lines)
-            return
+            return False, ""
 
         temp_c_path = task2_dir / "temp_static_check.c"
         try:
@@ -256,7 +263,7 @@ class QemuOJApp:
             lines.append(f"静态检查：无法写入临时文件: {e}")
             lines.append("======== 静态检查结束 ========")
             self._flush_log_lines_on_main_thread(lines)
-            return
+            return False, ""
 
         lines.append("开始静态检查（嵌入式 C：arm-none-eabi / freestanding / Cortex-M3）...")
 
@@ -274,6 +281,8 @@ class QemuOJApp:
                 cwd=str(task2_dir),
             )
             output = (result.stdout or "") + (result.stderr or "")
+            static_eligible = True
+            static_output = output
             lines.append("静态检查完成")
             lines.append(output.rstrip() if output.strip() else "(clang-tidy 无 stdout/stderr 输出)")
         except FileNotFoundError:
@@ -293,6 +302,31 @@ class QemuOJApp:
 
         lines.append("======== 静态检查结束 ========")
         self._flush_log_lines_on_main_thread(lines)
+        return static_eligible, static_output
+
+    def _emit_baremetal_final_score(self, static_eligible: bool, static_output: str) -> None:
+        ctx = getattr(self, "_baremetal_score_ctx", None) or {}
+        map_report = ctx.get("map_report")
+        line_pct = ctx.get("coverage_line")
+        branch_pct = ctx.get("coverage_branch")
+        stack_scores: List[Optional[int]] = ctx.get("stack_scores") or []
+        inj_total = self.survival_injection_total
+        surv_rate = (
+            (self.survival_injection_survived / inj_total) if inj_total > 0 else 0.0
+        )
+        total, breakdown = compute_baremetal_final_score(
+            static_eligible=static_eligible,
+            static_clang_output=static_output,
+            line_pct=line_pct,
+            branch_pct=branch_pct,
+            survival_rate=surv_rate,
+            injection_total=inj_total,
+            normal_stack_scores=stack_scores,
+            map_report=map_report,
+        )
+        for ln in format_final_score_log_lines(breakdown):
+            self.log(ln)
+        self.log(f"最终得分=={breakdown['total']:.2f}")
 
     def run_judge(self):
         try:
@@ -383,6 +417,12 @@ class QemuOJApp:
         """
         try:
             self.log("开始裸机 Cortex-M UART 评测...")
+            self._baremetal_score_ctx = {
+                "map_report": None,
+                "coverage_line": None,
+                "coverage_branch": None,
+                "stack_scores": [],
+            }
 
             # Ensure QEMU manager exists (init_qemu creates it once).
             if self.qemu_mgr is None:
@@ -412,6 +452,7 @@ class QemuOJApp:
                     )
                     report = dict(report)
                     report["sections"] = []
+                    self._baremetal_score_ctx["map_report"] = report
                     resource_usage_log_line = (
                         f"{RESOURCE_USAGE_LOG_PREFIX}"
                         f"{format_resource_usage_summary(report)}"
@@ -539,18 +580,24 @@ class QemuOJApp:
                 or f"{RESOURCE_USAGE_LOG_PREFIX}资源占用未解析"
             )
 
+            self._baremetal_score_ctx["stack_scores"] = list(normal_stack_scores)
+
             if self.config.get("enable_coverage_embedded", False):
-                self._run_embedded_coverage_host(
+                lp, bp = self._run_embedded_coverage_host(
                     prepared_code=prepared_code,
                     cases=cases,
                 )
+                self._baremetal_score_ctx["coverage_line"] = lp
+                self._baremetal_score_ctx["coverage_branch"] = bp
 
         except Exception as e:
             self.log(f"裸机评测错误: {str(e)}")
             messagebox.showerror("错误", str(e))
 
-    def _run_embedded_coverage_host(self, prepared_code: str, cases: list) -> None:
-        """课堂级 gcov：宿主 gcc 近似（不参与 AC/WA）。仅在裸机评测成功后调用。"""
+    def _run_embedded_coverage_host(
+        self, prepared_code: str, cases: list
+    ) -> Tuple[Optional[float], Optional[float]]:
+        """课堂级 gcov：宿主 gcc 近似（不参与 AC/WA）。返回 (line_pct, branch_pct)，失败为 (None, None)。"""
         task2_dir = Path(__file__).resolve().parent
         in_paths = [(task2_dir / c["in_path"]).resolve() for c in cases]
         try:
@@ -564,9 +611,12 @@ class QemuOJApp:
                 log=self.log,
             )
             if not res.get("summary_text"):
-                return
+                return None, None
+            detail = res.get("detail") or {}
+            return detail.get("line_pct"), detail.get("branch_pct")
         except Exception as e:
             self.log(f"宿主覆盖率失败: {e}")
+            return None, None
 
     def update_case_result(self, name, status, time_val=None, stack_col="-", info=None):
         self.root.after(
@@ -596,7 +646,9 @@ class QemuOJApp:
                 self.run_judge()
         finally:
             try:
-                self._perform_static_check_after_judge(user_code)
+                st_ok, st_out = self._perform_static_check_after_judge(user_code)
+                if baremetal_uart:
+                    self._emit_baremetal_final_score(st_ok, st_out)
             finally:
                 self.judge_running = False
                 self.root.after(0, lambda: self.btn_judge.config(state="normal"))

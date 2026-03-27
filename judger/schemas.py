@@ -40,4 +40,12 @@ class JudgeResponse(BaseModel):
         default=None,
         description="裸机：资源占用 JSON（无 per-section 列表）；普通 C 或未解析时为 None",
     )
+    final_score: Optional[float] = Field(
+        default=None,
+        description="裸机综合得分 [0,100] 两位小数；非 cortexm_baremetal_uart 或未计算时为 None",
+    )
+    final_score_breakdown: Optional[dict[str, Any]] = Field(
+        default=None,
+        description="裸机分项得分明细；无综合分时为 None",
+    )
 

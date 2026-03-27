@@ -21,6 +21,12 @@ from judger.core.map_resource_usage import (
     format_resource_usage_summary,
 )
 from judger.core.stack_watermark import testcase_stack_wm_api
+from judger.core.final_score import (
+    clang_tidy_run,
+    compute_baremetal_final_score,
+    format_final_score_log_lines,
+)
+from judger.core.coverage_embedded import run_embedded_host_coverage
 
 from judger.schemas import (
     JudgeResponse,
@@ -175,6 +181,7 @@ class JudgeService:
 
             cases = OJEngine.get_test_cases(str(problem_dir))
             test_cases: list[TestCaseResult] = []
+            normal_stack_scores: list[Optional[int]] = []
             successful_recoveries = 0
             injection_total = 0
 
@@ -197,19 +204,21 @@ class JudgeService:
                     )
                     is_ac = OJEngine.compare(expected, normal_res.actual_output)
                     status = "AC" if is_ac else "WA"
+                    wm_fields = testcase_stack_wm_api(
+                        normal_res.stack_watermark,
+                        self.config.get("stack_watermark"),
+                        self.fault_config,
+                    )
                     test_cases.append(
                         TestCaseResult(
                             name=name,
                             status=status,
                             time_ms=normal_res.exec_time_ms,
                             info="通过" if is_ac else "答案错误",
-                            **testcase_stack_wm_api(
-                                normal_res.stack_watermark,
-                                self.config.get("stack_watermark"),
-                                self.fault_config,
-                            ),
+                            **wm_fields,
                         )
                     )
+                    normal_stack_scores.append(wm_fields.get("stack_watermark_score"))
                 except Exception as e:
                     run_status, info = self._classify_run_exception(e)
                     test_cases.append(
@@ -220,6 +229,7 @@ class JudgeService:
                             info=info,
                         )
                     )
+                    normal_stack_scores.append(None)
                     continue
 
                 # 2.2) Fault injection + re-run（GDB）
@@ -290,6 +300,39 @@ class JudgeService:
             else:
                 overall_result = "WA"
 
+            line_pct: Optional[float] = None
+            branch_pct: Optional[float] = None
+            if self.config.get("enable_coverage_embedded", False):
+                try:
+                    in_paths = [Path(c["in_path"]).resolve() for c in cases]
+                    cov_res = run_embedded_host_coverage(
+                        prepared_user_c=prepared_code,
+                        task2_root=self.task2_root,
+                        problem_id=problem_id,
+                        case_in_paths=in_paths,
+                        log=logger,
+                    )
+                    det = cov_res.get("detail") or {}
+                    line_pct = det.get("line_pct")
+                    branch_pct = det.get("branch_pct")
+                except Exception:
+                    pass
+
+            st_elig, st_out = clang_tidy_run(self.task2_root, code)
+            _, breakdown = compute_baremetal_final_score(
+                static_eligible=st_elig,
+                static_clang_output=st_out,
+                line_pct=line_pct,
+                branch_pct=branch_pct,
+                survival_rate=survival_rate,
+                injection_total=total_tests,
+                normal_stack_scores=normal_stack_scores,
+                map_report=resource_usage,
+            )
+            for ln in format_final_score_log_lines(breakdown):
+                _LOG.info("%s", ln)
+            _LOG.info("最终得分==%.2f", breakdown["total"])
+
             return JudgeResponse(
                 overall_result=overall_result,
                 test_cases=test_cases,
@@ -298,6 +341,8 @@ class JudgeService:
                 successful_recoveries=successful_recoveries,
                 resource_usage_summary=resource_usage_summary,
                 resource_usage=resource_usage,
+                final_score=breakdown["total"],
+                final_score_breakdown=breakdown,
             )
         finally:
             try:

@@ -1,4 +1,9 @@
-# task2-local only (Python/venv/__pycache__ 等见仓库根目录 .gitignore)
+# task2-local only
+
+# Python 缓存（勿提交）
+__pycache__/
+*.py[cod]
+*$py.class
 
 # 运行时临时目录：判题、GUI 任务、覆盖率、固件构建产物等
 .temp/
