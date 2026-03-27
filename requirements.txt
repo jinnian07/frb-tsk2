@@ -10,14 +10,8 @@ tkinterweb-tkhtml==2.1.1
 tkinterweb-tkhtml-extras==1.3.0
 tkwebview2==3.5.0
 yarl==1.23.0
-
-fastapi==0.115.0
-uvicorn==0.29.0
-pydantic==2.7.0
-python-multipart==0.0.20
-# 数据库相关（按需选择）
-sqlalchemy==2.0.28
-alembic==1.13.0
-# 其他工具
-python-dotenv==1.0.0
-yarl==1.23.0
+fastapi
+uvicorn[standard]
+paramiko
+pydantic
+gcovr

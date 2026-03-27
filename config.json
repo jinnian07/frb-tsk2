@@ -1,0 +1,28 @@
+{
+    "enable_coverage_embedded": true,
+    "stack_watermark": {
+        "enabled": true,
+        "safe_margin_bytes": 64,
+        "warn_usage_ratio": 0.8,
+        "high_usage_ratio": 0.95,
+        "score_enabled": true,
+        "score_safe_ratio": 0.7,
+        "score_warn_ratio": 0.9,
+        "score_warn_coefficient": 50,
+        "score_danger_linear": 100,
+        "score_danger_fixed": 20
+    },
+    "ssh": {
+        "host": "127.0.0.1",
+        "port": 2222,
+        "username": "triple9",
+        "password": "Mly20071121",
+        "remote_work_dir": "/home/triple9/oj_test",
+        "remote_path": "/home/triple9/test.c"
+    },
+    "qemu": {
+        "executable": "qemu-system-aarch64",
+        "bios": "C:\\Program Files\\qemu\\share\\edk2-aarch64-code.fd",
+        "drive": "C:\\Users\\xiaolait\\workspace\\qemu\\ubuntu.qcow2"
+    }
+}

@@ -1,52 +1,38 @@
-# .clang-tidy
+# task2 嵌入式 C（裸机 / Cortex-M、freestanding）静态检查默认配置
+#
+# 说明：
+# - misc-misra-c2012-* 依赖 LLVM/clang-tidy 是否编译了 MISRA 模块；若报 unknown check，请升级
+#   clang-tidy 或从 Checks 中删除 misc-misra-c2012-* 两行。
+# - WarningsAsErrors 留空：教学场景下避免 MISRA/风格类问题全部当错误退出；请在日志中查看
+#   clang-analyzer 与 MISRA 的 warning。
+# - HeaderFilterRegex：仅对路径匹配的头文件输出诊断（主 .c 始终检查），减轻系统头干扰。
 ---
-# 合并所有检查规则到单个 Checks 键（用逗号分隔）
-Checks: >-
+Checks: >
   clang-analyzer-*,
   misc-misra-c2012-*,
-  readability-identifier-naming,
   misc-unused-parameters,
   misc-c-static-assert,
-  performance-move-const-arg,
-  cppcoreguidelines-pro-type-vararg,
-  modernize-use-nullptr,
-  modernize-use-auto
+  readability-identifier-naming
 
-# 将 MISRA C 规则设为错误（必须修复）
-WarningsAsErrors: 'misc-misra-c2012-*'
+WarningsAsErrors: ''
 
-# 检查所有头文件
-HeaderFilterRegex: '.*'
+# baremetal、题目 Pxxxx、用户工程目录下的头文件
+HeaderFilterRegex: '.*/(baremetal|P[0-9]{4}|user_projects)(/|\\\\).*'
 
-# 不自动格式化代码
 FormatStyle: none
 
-# 命名规范配置（通过 CheckOptions 嵌入）
 CheckOptions:
-  # 类名使用驼峰命名（如 MyClass）
-  - key: readability-identifier-naming.Class
-    value: CamelCase
-
-  # 函数名使用蛇形命名（如 my_function）
   - key: readability-identifier-naming.Function
     value: snake_case
-
-  # 变量名使用蛇形命名（如 my_variable）
   - key: readability-identifier-naming.Variable
     value: snake_case
-
-  # 宏名使用蛇形命名（如 MY_MACRO）
-  - key: readability-identifier-naming.Macro
-    value: snake_case
-
-  # 全局变量前缀为 g_（如 g_config）
   - key: readability-identifier-naming.GlobalVariable
-    value: g_snake_case
-
-  # 常量前缀为 k_（如 kMaxRetry）
+    value: snake_case
   - key: readability-identifier-naming.Constant
-    value: k_snake_case
-
-  # 严格检查函数参数未使用（警告升级为错误）
-  - key: readability-identifier-naming.UnusedParameter
-    value: error
+    value: UPPER_CASE
+  - key: readability-identifier-naming.MacroDefinition
+    value: UPPER_CASE
+  - key: readability-identifier-naming.Typedef
+    value: CamelCase
+  - key: readability-identifier-naming.EnumConstant
+    value: UPPER_CASE

@@ -12,16 +12,18 @@ class OJComponents:
 
     @staticmethod
     def create_result_table(parent):
-        columns = ("id", "status", "time", "info")
+        columns = ("id", "status", "time", "stack", "info")
         tree = ttk.Treeview(parent, columns=columns, show="headings", height=12)
         tree.heading("id", text="测试点")
         tree.heading("status", text="结果")
         tree.heading("time", text="耗时(ms)")
+        tree.heading("stack", text="栈水位线")
         tree.heading("info", text="备注")
         tree.column("id", width=100, anchor="center")
         tree.column("status", width=80, anchor="center")
-        tree.column("time", width=80, anchor="center")
-        tree.column("info", width=150, anchor="w")
+        tree.column("time", width=72, anchor="center")
+        tree.column("stack", width=220, anchor="w")
+        tree.column("info", width=130, anchor="w")
         return tree
 
     @staticmethod
