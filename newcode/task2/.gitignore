@@ -1,0 +1,11 @@
+# task2-local only (Python/venv/__pycache__ 等见仓库根目录 .gitignore)
+
+# 运行时临时目录：判题、GUI 任务、覆盖率、固件构建产物等
+.temp/
+
+# 本地草稿 / 随手测试 C 文件（根目录 .gitignore 未包含这两个文件名）
+temp_code.c
+test.c
+
+# 用户本地工程落盘，不应入库
+user_projects/
