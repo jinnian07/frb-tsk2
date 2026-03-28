@@ -1,0 +1,492 @@
+Archive member included to satisfy reference by file (symbol)
+
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_atan2.o)
+                              C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o (atan2f)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_sqrt.o)
+                              C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o (sqrtf)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_sqrt.o)
+                              C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_sqrt.o) (__ieee754_sqrtf)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_atan2.o)
+                              C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_atan2.o) (__ieee754_atan2f)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_atan.o)
+                              C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_atan2.o) (atanf)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_fabs.o)
+                              C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_atan2.o) (fabsf)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_mulsf3.o)
+                              C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o (__aeabi_fmul)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_addsubsf3.o)
+                              C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o (__aeabi_fsub)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_muldivsf3.o)
+                              C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o (__aeabi_fdiv)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_cmpsf2.o)
+                              C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o (__aeabi_fcmpeq)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_unordsf2.o)
+                              C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_sqrt.o) (__aeabi_fcmpun)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_fixunssfsi.o)
+                              C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o (__aeabi_f2uiz)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-errno.o)
+                              C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_sqrt.o) (__errno)
+C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-impure.o)
+                              C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-errno.o) (_impure_ptr)
+
+Discarded input sections
+
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .text.fusion_init
+                0x00000000       0x34 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccxAMA29.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccxAMA29.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccxAMA29.o
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+ .text.UART_IRQHandler
+                0x00000000        0x4 C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .text._write   0x00000000       0x1c C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .text._read    0x00000000       0x68 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .text._close   0x00000000        0x8 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .text._lseek   0x00000000        0x4 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .text._fstat   0x00000000        0xc C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .text._isatty  0x00000000        0x4 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .text._kill    0x00000000        0x8 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .text._getpid  0x00000000        0x4 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .text._sbrk    0x00000000        0x8 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .text._exit    0x00000000        0x4 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .debug_info    0x00000000      0x619 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .debug_abbrev  0x00000000      0x1b3 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .debug_loclists
+                0x00000000      0x273 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .debug_aranges
+                0x00000000       0x68 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .debug_rnglists
+                0x00000000       0x61 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .debug_line    0x00000000      0x3f5 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .debug_str     0x00000000      0x410 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .comment       0x00000000       0x46 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .debug_frame   0x00000000       0xd4 C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .ARM.attributes
+                0x00000000       0x2d C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+ .text          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_atan2.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_atan2.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_atan2.o)
+ .text          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_sqrt.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_sqrt.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_sqrt.o)
+ .text          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_sqrt.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_sqrt.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_sqrt.o)
+ .text          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_atan2.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_atan2.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_atan2.o)
+ .text          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_atan.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_atan.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_atan.o)
+ .text          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_fabs.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_fabs.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_fabs.o)
+ .text          0x00000000      0x168 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_mulsf3.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_mulsf3.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_mulsf3.o)
+ .debug_line_str
+                0x00000000       0xca C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_mulsf3.o)
+ .debug_frame   0x00000000       0x24 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_mulsf3.o)
+ .ARM.attributes
+                0x00000000       0x1d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_mulsf3.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_addsubsf3.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_addsubsf3.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_muldivsf3.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_muldivsf3.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_cmpsf2.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_cmpsf2.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_unordsf2.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_unordsf2.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_fixunssfsi.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_fixunssfsi.o)
+ .text          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-errno.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-errno.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-errno.o)
+ .text          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-impure.o)
+ .data          0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-impure.o)
+ .bss           0x00000000        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-impure.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x08000000         0x00020000         xr
+RAM              0x20000000         0x00002000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+LOAD C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+LOAD C:\Users\MAC\AppData\Local\Temp\ccxAMA29.o
+LOAD C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+LOAD C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+LOAD C:\Users\MAC\AppData\Local\Temp\ccXS9ZNL.o
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a
+START GROUP
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a
+END GROUP
+START GROUP
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libnosys.a
+END GROUP
+START GROUP
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libnosys.a
+END GROUP
+
+.isr_vector     0x08000000      0x134
+ *(.isr_vector)
+ .isr_vector    0x08000000      0x134 C:\Users\MAC\AppData\Local\Temp\ccxAMA29.o
+                0x08000000                vector_table
+
+.text           0x08000134     0x15f8
+ *(.text*)
+ .text.skip_ws  0x08000134       0x24 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .text.uart_print_cstr
+                0x08000158       0x18 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .text.uart_print_u32
+                0x08000170       0x5c C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .text.uart_print_float_3
+                0x080001cc      0x100 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .text.uart_print_float_1
+                0x080002cc       0x60 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .text.fusion_update
+                0x0800032c      0x1bc C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+                0x0800032c                fusion_update
+ .text.UART_IRQHandler
+                0x080004e8       0x58 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+                0x080004e8                UART_IRQHandler
+ .text.startup.main
+                0x08000540      0x56c C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+                0x08000540                main
+ .text.Default_Handler
+                0x08000aac        0x4 C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+                0x08000aac                Default_Handler
+ .text.Reset_Handler
+                0x08000ab0       0x88 C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+                0x08000ab0                Reset_Handler
+ .text.uart_init
+                0x08000b38       0x18 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+                0x08000b38                uart_init
+ .text.uart_try_read_byte
+                0x08000b50       0x1c C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+                0x08000b50                uart_try_read_byte
+ .text.uart_write_byte
+                0x08000b6c       0x14 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+                0x08000b6c                uart_write_byte
+ .text.UART_ReceiveByte
+                0x08000b80        0xc C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+                0x08000b80                UART_ReceiveByte
+ .text.oj_uart_poll_step
+                0x08000b8c       0x1c C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+                0x08000b8c                oj_uart_poll_step
+ .text.atan2f   0x08000ba8        0x4 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_atan2.o)
+                0x08000ba8                atan2f
+ .text.sqrtf    0x08000bac       0x3c C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_sqrt.o)
+                0x08000bac                sqrtf
+ .text.__ieee754_sqrtf
+                0x08000be8       0xe4 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_sqrt.o)
+                0x08000be8                __ieee754_sqrtf
+ .text.__ieee754_atan2f
+                0x08000ccc      0x120 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_atan2.o)
+                0x08000ccc                __ieee754_atan2f
+ .text.atanf    0x08000dec      0x230 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_atan.o)
+                0x08000dec                atanf
+ .text.fabsf    0x0800101c        0x8 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_fabs.o)
+                0x0800101c                fabsf
+ .text          0x08001024      0x21c C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_addsubsf3.o)
+                0x08001024                __aeabi_frsub
+                0x0800102c                __subsf3
+                0x0800102c                __aeabi_fsub
+                0x08001030                __aeabi_fadd
+                0x08001030                __addsf3
+                0x08001190                __aeabi_ui2f
+                0x08001190                __floatunsisf
+                0x08001198                __aeabi_i2f
+                0x08001198                __floatsisf
+                0x080011b4                __aeabi_ul2f
+                0x080011b4                __floatundisf
+                0x080011c4                __aeabi_l2f
+                0x080011c4                __floatdisf
+ .text          0x08001240      0x2a0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_muldivsf3.o)
+                0x08001240                __mulsf3
+                0x08001240                __aeabi_fmul
+                0x080013a8                __aeabi_fdiv
+                0x080013a8                __divsf3
+ .text          0x080014e0       0xec C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_cmpsf2.o)
+                0x080014e0                __gesf2
+                0x080014e0                __gtsf2
+                0x080014e8                __lesf2
+                0x080014e8                __ltsf2
+                0x080014f0                __nesf2
+                0x080014f0                __eqsf2
+                0x080014f0                __cmpsf2
+                0x08001550                __aeabi_cfrcmple
+                0x08001558                __aeabi_cfcmpeq
+                0x08001558                __aeabi_cfcmple
+                0x08001568                __aeabi_fcmpeq
+                0x0800157c                __aeabi_fcmplt
+                0x08001590                __aeabi_fcmple
+                0x080015a4                __aeabi_fcmpge
+                0x080015b8                __aeabi_fcmpgt
+ .text          0x080015cc       0x2c C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_unordsf2.o)
+                0x080015cc                __unordsf2
+                0x080015cc                __aeabi_fcmpun
+ .text          0x080015f8       0x40 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_fixunssfsi.o)
+                0x080015f8                __fixunssfsi
+                0x080015f8                __aeabi_f2uiz
+ .text.__errno  0x08001638        0xc C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-errno.o)
+                0x08001638                __errno
+ *(.rodata*)
+ .rodata.main.str1.4
+                0x08001644       0xa5 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+                                 0xb1 (size before relaxing)
+ *fill*         0x080016e9        0x3 
+ .rodata.tiny   0x080016ec        0x4 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_sqrt.o)
+ .rodata.one    0x080016f0        0x4 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_sqrt.o)
+ .rodata.CSWTCH.7
+                0x080016f4        0xc C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_atan2.o)
+ .rodata.CSWTCH.6
+                0x08001700        0xc C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_atan2.o)
+ .rodata.atanlo
+                0x0800170c       0x10 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_atan.o)
+ .rodata.atanhi
+                0x0800171c       0x10 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_atan.o)
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+ *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+
+.glue_7         0x0800172c        0x0
+ .glue_7        0x0800172c        0x0 linker stubs
+
+.glue_7t        0x0800172c        0x0
+ .glue_7t       0x0800172c        0x0 linker stubs
+
+.vfp11_veneer   0x0800172c        0x0
+ .vfp11_veneer  0x0800172c        0x0 linker stubs
+
+.v4_bx          0x0800172c        0x0
+ .v4_bx         0x0800172c        0x0 linker stubs
+
+.iplt           0x0800172c        0x0
+ .iplt          0x0800172c        0x0 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+
+.rel.dyn        0x0800172c        0x0
+ .rel.iplt      0x0800172c        0x0 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+
+.data           0x20000000       0x50 load address 0x0800172c
+                0x20000000                        _sdata = .
+ *(.data*)
+ .data._impure_ptr
+                0x20000000        0x4 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-impure.o)
+                0x20000000                _impure_ptr
+ .data._impure_data
+                0x20000004       0x4c C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-impure.o)
+                0x20000004                _impure_data
+ *(.ramfunc*)
+                0x20000050                        _edata = .
+                0x0800172c                        _sidata = LOADADDR (.data)
+
+.igot.plt       0x20000050        0x0 load address 0x0800177c
+ .igot.plt      0x20000050        0x0 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+
+.bss            0x20000050       0xd5 load address 0x0800177c
+                0x20000050                        _sbss = .
+ *(.bss*)
+ .bss.s_line_ready
+                0x20000050        0x1 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ *fill*         0x20000051        0x1 
+ .bss.s_line_len
+                0x20000052        0x2 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .bss.s_line    0x20000054       0xa0 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .bss.s_step_applied
+                0x200000f4        0x1 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ *fill*         0x200000f5        0x3 
+ .bss.s_consecutive_bad
+                0x200000f8        0x4 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .bss.s_roll_filt
+                0x200000fc        0x4 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .bss.s_pitch_filt
+                0x20000100        0x4 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .bss.roll      0x20000104        0x4 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+                0x20000104                roll
+ .bss.pitch     0x20000108        0x4 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+                0x20000108                pitch
+ .bss.gyro_data
+                0x2000010c        0xc C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+                0x2000010c                gyro_data
+ .bss.accel_data
+                0x20000118        0xc C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+                0x20000118                accel_data
+ .bss.s_uart_rx_shadow
+                0x20000124        0x1 C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+ *(COMMON)
+                0x20000125                        _ebss = .
+
+._stack_top     0x20000125     0x1edb load address 0x08001851
+                0x20002000                        . = (ORIGIN (RAM) + LENGTH (RAM))
+ *fill*         0x20000125     0x1edb 
+                0x20002000                        _estack = (ORIGIN (RAM) + LENGTH (RAM))
+OUTPUT(C:\Users\MAC\Desktop\frb-tsk2\project\P0002\.build_judge\firmware.elf elf32-littlearm)
+LOAD linker stubs
+
+.debug_info     0x00000000     0x1ac5
+ .debug_info    0x00000000     0x1684 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .debug_info    0x00001684      0x1fb C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+ .debug_info    0x0000187f      0x147 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+ .debug_info    0x000019c6       0xff C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+
+.debug_abbrev   0x00000000      0x804
+ .debug_abbrev  0x00000000      0x4e7 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .debug_abbrev  0x000004e7      0x14e C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+ .debug_abbrev  0x00000635       0xfe C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+ .debug_abbrev  0x00000733       0xd1 C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+
+.debug_loclists
+                0x00000000     0x11e2
+ .debug_loclists
+                0x00000000     0x113b C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .debug_loclists
+                0x0000113b       0x6e C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+ .debug_loclists
+                0x000011a9       0x22 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+ .debug_loclists
+                0x000011cb       0x17 C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+
+.debug_aranges  0x00000000       0xe8
+ .debug_aranges
+                0x00000000       0x60 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .debug_aranges
+                0x00000060       0x28 C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+ .debug_aranges
+                0x00000088       0x30 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+ .debug_aranges
+                0x000000b8       0x30 C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+
+.debug_rnglists
+                0x00000000      0x272
+ .debug_rnglists
+                0x00000000      0x20e C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .debug_rnglists
+                0x0000020e       0x26 C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+ .debug_rnglists
+                0x00000234       0x1f C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+ .debug_rnglists
+                0x00000253       0x1f C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+
+.debug_line     0x00000000     0x129a
+ .debug_line    0x00000000      0xe22 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .debug_line    0x00000e22      0x1bb C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+ .debug_line    0x00000fdd      0x183 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+ .debug_line    0x00001160      0x13a C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+
+.debug_str      0x00000000      0x699
+ .debug_str     0x00000000      0x699 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+                                0x568 (size before relaxing)
+ .debug_str     0x00000699        0x0 C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+                                0x266 (size before relaxing)
+ .debug_str     0x00000699        0x0 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+                                0x221 (size before relaxing)
+ .debug_str     0x00000699        0x0 C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+                                0x235 (size before relaxing)
+
+.comment        0x00000000       0x45
+ .comment       0x00000000       0x45 C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+                                 0x46 (size before relaxing)
+ .comment       0x00000045        0x0 C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+                                 0x46 (size before relaxing)
+ .comment       0x00000045        0x0 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+                                 0x46 (size before relaxing)
+ .comment       0x00000045        0x0 C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+                                 0x46 (size before relaxing)
+
+.ARM.attributes
+                0x00000000       0x2b
+ .ARM.attributes
+                0x00000000       0x2d C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .ARM.attributes
+                0x0000002d       0x2d C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+ .ARM.attributes
+                0x0000005a       0x1b C:\Users\MAC\AppData\Local\Temp\ccxAMA29.o
+ .ARM.attributes
+                0x00000075       0x2d C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+ .ARM.attributes
+                0x000000a2       0x2d C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+ .ARM.attributes
+                0x000000cf       0x2d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_atan2.o)
+ .ARM.attributes
+                0x000000fc       0x2d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_sqrt.o)
+ .ARM.attributes
+                0x00000129       0x2d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_sqrt.o)
+ .ARM.attributes
+                0x00000156       0x2d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_atan2.o)
+ .ARM.attributes
+                0x00000183       0x2d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_atan.o)
+ .ARM.attributes
+                0x000001b0       0x2d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_fabs.o)
+ .ARM.attributes
+                0x000001dd       0x1d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_addsubsf3.o)
+ .ARM.attributes
+                0x000001fa       0x1d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_muldivsf3.o)
+ .ARM.attributes
+                0x00000217       0x1d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_cmpsf2.o)
+ .ARM.attributes
+                0x00000234       0x1d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_unordsf2.o)
+ .ARM.attributes
+                0x00000251       0x1d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_fixunssfsi.o)
+ .ARM.attributes
+                0x0000026e       0x2d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-errno.o)
+ .ARM.attributes
+                0x0000029b       0x2d C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-impure.o)
+
+.debug_frame    0x00000000      0x4e4
+ .debug_frame   0x00000000      0x14c C:\Users\MAC\AppData\Local\Temp\ccFp7z7g.o
+ .debug_frame   0x0000014c       0x38 C:\Users\MAC\AppData\Local\Temp\ccUJwMLE.o
+ .debug_frame   0x00000184       0x40 C:\Users\MAC\AppData\Local\Temp\cccKJqpS.o
+ .debug_frame   0x000001c4       0x48 C:\Users\MAC\AppData\Local\Temp\cc3leMqI.o
+ .debug_frame   0x0000020c       0x20 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_atan2.o)
+ .debug_frame   0x0000022c       0x2c C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-wf_sqrt.o)
+ .debug_frame   0x00000258       0x2c C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_sqrt.o)
+ .debug_frame   0x00000284       0x38 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-ef_atan2.o)
+ .debug_frame   0x000002bc       0x54 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_atan.o)
+ .debug_frame   0x00000310       0x20 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a(libm_a-sf_fabs.o)
+ .debug_frame   0x00000330       0x4c C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_addsubsf3.o)
+ .debug_frame   0x0000037c       0x38 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_muldivsf3.o)
+ .debug_frame   0x000003b4       0xc8 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_cmpsf2.o)
+ .debug_frame   0x0000047c       0x24 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_unordsf2.o)
+ .debug_frame   0x000004a0       0x24 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_fixunssfsi.o)
+ .debug_frame   0x000004c4       0x20 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a(libc_a-errno.o)
+
+.debug_line_str
+                0x00000000       0xca
+ .debug_line_str
+                0x00000000       0xca C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_addsubsf3.o)
+ .debug_line_str
+                0x000000ca        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_muldivsf3.o)
+                                 0xca (size before relaxing)
+ .debug_line_str
+                0x000000ca        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_cmpsf2.o)
+                                 0xca (size before relaxing)
+ .debug_line_str
+                0x000000ca        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_unordsf2.o)
+                                 0xca (size before relaxing)
+ .debug_line_str
+                0x000000ca        0x0 C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a(_arm_fixunssfsi.o)
+                                 0xca (size before relaxing)

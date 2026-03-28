@@ -1,0 +1,271 @@
+
+Discarded input sections
+
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .text.process_frame
+                0x00000000       0x74 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccWMOjqT.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccWMOjqT.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccWMOjqT.o
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+ .text.UART_IRQHandler
+                0x00000000        0x4 C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+ .text          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .data          0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .bss           0x00000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .text._write   0x00000000       0x1c C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .text._read    0x00000000       0x68 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .text._close   0x00000000        0x8 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .text._lseek   0x00000000        0x4 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .text._fstat   0x00000000        0xc C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .text._isatty  0x00000000        0x4 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .text._kill    0x00000000        0x8 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .text._getpid  0x00000000        0x4 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .text._sbrk    0x00000000        0x8 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .text._exit    0x00000000        0x4 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .debug_info    0x00000000      0x619 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .debug_abbrev  0x00000000      0x1b3 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .debug_loclists
+                0x00000000      0x273 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .debug_aranges
+                0x00000000       0x68 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .debug_rnglists
+                0x00000000       0x61 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .debug_line    0x00000000      0x3f5 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .debug_str     0x00000000      0x40f C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .comment       0x00000000       0x46 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .debug_frame   0x00000000       0xd4 C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+ .ARM.attributes
+                0x00000000       0x2d C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x08000000         0x00020000         xr
+RAM              0x20000000         0x00002000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+LOAD C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+LOAD C:\Users\MAC\AppData\Local\Temp\ccWMOjqT.o
+LOAD C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+LOAD C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+LOAD C:\Users\MAC\AppData\Local\Temp\ccxGZSdB.o
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libm.a
+START GROUP
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libg_nano.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a
+END GROUP
+START GROUP
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libnosys.a
+END GROUP
+START GROUP
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/thumb/v7-m/nofp\libgcc.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libc_nano.a
+LOAD C:/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/lib/thumb/v7-m/nofp\libnosys.a
+END GROUP
+
+.isr_vector     0x08000000      0x134
+ *(.isr_vector)
+ .isr_vector    0x08000000      0x134 C:\Users\MAC\AppData\Local\Temp\ccWMOjqT.o
+                0x08000000                vector_table
+
+.text           0x08000134      0x279
+ *(.text*)
+ .text.UART_IRQHandler
+                0x08000134       0xdc C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+                0x08000134                UART_IRQHandler
+ .text.startup.main
+                0x08000210       0x88 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+                0x08000210                main
+ .text.Default_Handler
+                0x08000298        0x4 C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+                0x08000298                Default_Handler
+ .text.Reset_Handler
+                0x0800029c       0x88 C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+                0x0800029c                Reset_Handler
+ .text.uart_init
+                0x08000324       0x18 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+                0x08000324                uart_init
+ .text.uart_try_read_byte
+                0x0800033c       0x1c C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+                0x0800033c                uart_try_read_byte
+ .text.uart_write_byte
+                0x08000358       0x14 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+                0x08000358                uart_write_byte
+ .text.UART_ReceiveByte
+                0x0800036c        0xc C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+                0x0800036c                UART_ReceiveByte
+ .text.oj_uart_poll_step
+                0x08000378       0x1c C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+                0x08000378                oj_uart_poll_step
+ *(.rodata*)
+ .rodata.hex.0  0x08000394       0x11 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ *fill*         0x080003a5        0x3 
+ .rodata.hdr.1  0x080003a8        0x5 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+ *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+
+.glue_7         0x080003b0        0x0
+ .glue_7        0x080003b0        0x0 linker stubs
+
+.glue_7t        0x080003b0        0x0
+ .glue_7t       0x080003b0        0x0 linker stubs
+
+.vfp11_veneer   0x080003b0        0x0
+ .vfp11_veneer  0x080003b0        0x0 linker stubs
+
+.v4_bx          0x080003b0        0x0
+ .v4_bx         0x080003b0        0x0 linker stubs
+
+.iplt           0x080003b0        0x0
+ .iplt          0x080003b0        0x0 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+
+.rel.dyn        0x080003b0        0x0
+ .rel.iplt      0x080003b0        0x0 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+
+.data           0x20000000        0x0 load address 0x080003ad
+                0x20000000                        _sdata = .
+ *(.data*)
+ *(.ramfunc*)
+                0x20000000                        _edata = .
+                0x080003ad                        _sidata = LOADADDR (.data)
+
+.igot.plt       0x20000000        0x0
+ .igot.plt      0x20000000        0x0 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+
+.bss            0x20000000       0x2c
+                0x20000000                        _sbss = .
+ *(.bss*)
+ .bss.expected_len
+                0x20000000        0x1 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .bss.rx_index  0x20000001        0x1 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .bss.rx_state  0x20000002        0x1 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .bss.received_data_len
+                0x20000003        0x1 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+                0x20000003                received_data_len
+ .bss.data_ready
+                0x20000004        0x1 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+                0x20000004                data_ready
+ *fill*         0x20000005        0x3 
+ .bss.received_data
+                0x20000008       0x10 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+                0x20000008                received_data
+ .bss.rx_buffer
+                0x20000018       0x13 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+                0x20000018                rx_buffer
+ .bss.s_uart_rx_shadow
+                0x2000002b        0x1 C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+ *(COMMON)
+                0x2000002c                        _ebss = .
+
+._stack_top     0x2000002c     0x1fd4
+                0x20002000                        . = (ORIGIN (RAM) + LENGTH (RAM))
+ *fill*         0x2000002c     0x1fd4 
+                0x20002000                        _estack = (ORIGIN (RAM) + LENGTH (RAM))
+OUTPUT(C:\Users\MAC\Desktop\frb-tsk2\project\P0001\.build_test\firmware.elf elf32-littlearm)
+LOAD linker stubs
+
+.debug_info     0x00000000      0x95b
+ .debug_info    0x00000000      0x51a C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .debug_info    0x0000051a      0x1fb C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+ .debug_info    0x00000715      0x147 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+ .debug_info    0x0000085c       0xff C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+
+.debug_abbrev   0x00000000      0x590
+ .debug_abbrev  0x00000000      0x273 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .debug_abbrev  0x00000273      0x14e C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+ .debug_abbrev  0x000003c1       0xfe C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+ .debug_abbrev  0x000004bf       0xd1 C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+
+.debug_loclists
+                0x00000000      0x4b6
+ .debug_loclists
+                0x00000000      0x40f C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .debug_loclists
+                0x0000040f       0x6e C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+ .debug_loclists
+                0x0000047d       0x22 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+ .debug_loclists
+                0x0000049f       0x17 C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+
+.debug_aranges  0x00000000       0xb8
+ .debug_aranges
+                0x00000000       0x30 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .debug_aranges
+                0x00000030       0x28 C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+ .debug_aranges
+                0x00000058       0x30 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+ .debug_aranges
+                0x00000088       0x30 C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+
+.debug_rnglists
+                0x00000000       0xc7
+ .debug_rnglists
+                0x00000000       0x63 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .debug_rnglists
+                0x00000063       0x26 C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+ .debug_rnglists
+                0x00000089       0x1f C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+ .debug_rnglists
+                0x000000a8       0x1f C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+
+.debug_line     0x00000000      0x85b
+ .debug_line    0x00000000      0x3e3 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .debug_line    0x000003e3      0x1bb C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+ .debug_line    0x0000059e      0x183 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+ .debug_line    0x00000721      0x13a C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+
+.debug_str      0x00000000      0x420
+ .debug_str     0x00000000      0x420 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+                                0x2e5 (size before relaxing)
+ .debug_str     0x00000420        0x0 C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+                                0x265 (size before relaxing)
+ .debug_str     0x00000420        0x0 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+                                0x220 (size before relaxing)
+ .debug_str     0x00000420        0x0 C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+                                0x234 (size before relaxing)
+
+.comment        0x00000000       0x45
+ .comment       0x00000000       0x45 C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+                                 0x46 (size before relaxing)
+ .comment       0x00000045        0x0 C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+                                 0x46 (size before relaxing)
+ .comment       0x00000045        0x0 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+                                 0x46 (size before relaxing)
+ .comment       0x00000045        0x0 C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+                                 0x46 (size before relaxing)
+
+.ARM.attributes
+                0x00000000       0x2b
+ .ARM.attributes
+                0x00000000       0x2d C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .ARM.attributes
+                0x0000002d       0x2d C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+ .ARM.attributes
+                0x0000005a       0x1b C:\Users\MAC\AppData\Local\Temp\ccWMOjqT.o
+ .ARM.attributes
+                0x00000075       0x2d C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+ .ARM.attributes
+                0x000000a2       0x2d C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o
+
+.debug_frame    0x00000000      0x11c
+ .debug_frame   0x00000000       0x5c C:\Users\MAC\AppData\Local\Temp\ccU2dgB8.o
+ .debug_frame   0x0000005c       0x38 C:\Users\MAC\AppData\Local\Temp\ccZxK4UY.o
+ .debug_frame   0x00000094       0x40 C:\Users\MAC\AppData\Local\Temp\cc9JfL8Z.o
+ .debug_frame   0x000000d4       0x48 C:\Users\MAC\AppData\Local\Temp\ccbXReg9.o

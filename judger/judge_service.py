@@ -35,6 +35,23 @@ from judger.schemas import (
 
 _LOG = logging.getLogger(__name__)
 
+# 与 JudgeResponse.clang_tidy_output 描述一致：响应体不宜过大
+_CLANG_TIDY_LOG_MAX_BYTES = 32768
+
+
+def _truncate_clang_tidy_log(text: str) -> Optional[str]:
+    """保留 UTF-8 末尾若干字节；过长时丢弃前缀并加标记。"""
+    if not text or not str(text).strip():
+        return None
+    text = str(text)
+    raw = text.encode("utf-8")
+    if len(raw) <= _CLANG_TIDY_LOG_MAX_BYTES:
+        return text
+    tail = raw[-_CLANG_TIDY_LOG_MAX_BYTES:]
+    while tail and (tail[0] & 0xC0) == 0x80:
+        tail = tail[1:]
+    return "...[truncated head]...\n" + tail.decode("utf-8", errors="replace")
+
 
 class JudgeService:
     """
@@ -127,6 +144,7 @@ class JudgeService:
             try:
                 artifacts = self._bare_builder.build(local_main_c, job_tmp_dir / "firmware")
             except Exception as e:
+                _, st_out_compile = clang_tidy_run(self.task2_root, code)
                 return JudgeResponse(
                     overall_result="RE",
                     test_cases=[
@@ -140,6 +158,7 @@ class JudgeService:
                     survival_rate=0.0,
                     total_tests=0,
                     successful_recoveries=0,
+                    clang_tidy_output=_truncate_clang_tidy_log(st_out_compile),
                 )
 
             resource_usage: Optional[dict[str, Any]] = None
@@ -343,6 +362,7 @@ class JudgeService:
                 resource_usage=resource_usage,
                 final_score=breakdown["total"],
                 final_score_breakdown=breakdown,
+                clang_tidy_output=_truncate_clang_tidy_log(st_out),
             )
         finally:
             try:

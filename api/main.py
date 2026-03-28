@@ -20,7 +20,8 @@
 #   ],
 #   "survival_rate": 0.75,            # 异常注入生存率 [0,1]（仅裸机：注入后 AC / 注入次数；普通 C 为 0）
 #   "total_tests": 3,                 # 故障注入试验次数（分母）；普通 C 为 0
-#   "successful_recoveries": 2       # 分子：注入后 AC 的次数
+#   "successful_recoveries": 2,      # 分子：注入后 AC 的次数
+#   "clang_tidy_output": "...",      # 可选：clang-tidy 输出（可能截尾约 32KB）
 # }
 
 from pathlib import Path

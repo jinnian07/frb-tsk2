@@ -1,4 +1,3 @@
-#include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/types.h>
@@ -104,7 +103,7 @@ int _isatty(int file) {
 int _kill(int pid, int sig) {
     (void)pid;
     (void)sig;
-    errno = EINVAL;
+    /* Avoid touching errno -> pulls impure/__sf/malloc on some newlib builds. */
     return -1;
 }
 
@@ -114,7 +113,6 @@ pid_t _getpid(void) {
 
 caddr_t _sbrk(int incr) {
     (void)incr;
-    errno = ENOMEM;
     return (caddr_t)-1;
 }
 

@@ -1,2 +1,4 @@
-OK: 55
-OK: 12 34
+[FUSION] RMSE_sim: 0.278 deg
+[FUSION] RMSE_hw: 0.278 deg
+[FUSION] Diff: 0.0% (within spec)
+[FUSION] Abnormal drops: 5 times (71.4% of total)

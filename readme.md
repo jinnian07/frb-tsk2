@@ -9,7 +9,25 @@
 
 HTTP API：`POST /api/v1/judge`
 
-## 启动命令
+## 判题 HTTP 服务（`api.main:app`，与教学平台对接常用）
+
+**必须在 `project` 目录使用独立虚拟环境**，不要复用 `first-test-main/fastapi_app/.venv`（其中未安装 `paramiko` 等，会报 `ModuleNotFoundError: paramiko`）。
+
+```bash
+cd project
+python -m venv .venv
+# Windows:
+.venv\Scripts\activate
+# Linux/macOS:
+# source .venv/bin/activate
+
+pip install -r requirements-api.txt
+python -m uvicorn api.main:app --host 127.0.0.1 --port 8001
+```
+
+Windows 上 `judger` 会加载 QEMU 相关模块，需要 `pywin32`（已写入 `requirements-api.txt`）。Linux 可去掉该行后自行处理 `qemu_manager` 依赖。
+
+## 启动命令（另一入口 `app/main:app`）
 方式一：使用 uvicorn
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 8000

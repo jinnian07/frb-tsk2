@@ -77,6 +77,7 @@ class BareMetalBuilder:
             "-fno-exceptions",
             "-fno-asynchronous-unwind-tables",
             "-nostartfiles",
+            "-fno-math-errno",
             "-I",
             str(self.runtime_dir.resolve()),
         ]
@@ -87,7 +88,8 @@ class BareMetalBuilder:
             "-Wl,--entry=Reset_Handler",
             "-Wl,--gc-sections",
             f"-Wl,-Map={str(map_path.resolve())}",
-            # newlib-nano is usually preferred; nosys specs provides stubs besides ours
+            # nano newlib shrinks .data/.bss (stdio/malloc); nosys keeps syscall stubs
+            "-specs=nano.specs",
             "-specs=nosys.specs",
         ]
 
@@ -102,6 +104,7 @@ class BareMetalBuilder:
             str(self.syscalls_c.resolve()),
             *extra_cflags,
             *ldflags,
+            "-lm",
             "-o",
             str(elf_path.resolve()),
         ]

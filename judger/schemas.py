@@ -48,4 +48,11 @@ class JudgeResponse(BaseModel):
         default=None,
         description="裸机分项得分明细；无综合分时为 None",
     )
+    clang_tidy_output: Optional[str] = Field(
+        default=None,
+        description=(
+            "clang-tidy stdout+stderr；服务端可截断仅保留 UTF-8 尾部约 32KB，"
+            "前缀带 ...[truncated head]...；未执行或无输出时为 None"
+        ),
+    )
 

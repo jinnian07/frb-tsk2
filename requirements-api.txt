@@ -1,0 +1,7 @@
+# 仅启动 HTTP 判题 API：uvicorn api.main:app
+# 在 project 目录下创建独立 venv，勿使用 first-test-main/fastapi_app 的 .venv
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.0
+paramiko>=3.4.0
+pywin32>=306; sys_platform == "win32"
