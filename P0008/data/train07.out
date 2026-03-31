@@ -1,0 +1,14 @@
+Temp: 25.1 C
+Temp: 25.2 C
+Temp: 25.3 C
+Temp: 25.1 C
+Temp: 25.2 C
+Temp: 25.3 C
+==== Power Consumption Report ====
+Normal mode avg current: 15.0 mA
+Low power mode avg current: 2.5 mA
+Reduction: 83.3%
+Simulation vs Hardware difference: 
+  Sim Normal: 24.8 mA, HW Normal: 15.0 mA (diff -39.5%)
+  Sim LP: 1.1 mA, HW LP: 2.5 mA (diff +127.3%)
+Analysis: QEMU not cycle-accurate; UART and LDO not in energy model; meter noise on HW.

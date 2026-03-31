@@ -30,7 +30,11 @@ static inline volatile uint32_t* reg32(uint32_t offset) {
     return (volatile uint32_t*)(USART1_BASE + offset);
 }
 
-void uart_init(void) {
+/*
+ * Weak default: P0001/P0002/… 未实现 uart_init 时由链接器选用本实现。
+ * P0000 等题若提交强符号 uart_init，将覆盖本函数，避免重复定义。
+ */
+__attribute__((weak)) void uart_init(void) {
     // Baud rate register (BRR) is accepted/stored by QEMU's USART model.
     // RX/TX in the model is mostly synchronous; we still set BRR for correctness.
     const uint32_t baud = 115200u;

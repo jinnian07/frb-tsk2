@@ -1,0 +1,5 @@
+ALLOC OK: 0
+CHECK OK
+WRITE OK
+CHECK ERROR: 内存损坏
+FREE ERROR: 内存越界，金丝雀值被破坏

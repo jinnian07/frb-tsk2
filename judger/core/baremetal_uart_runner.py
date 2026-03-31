@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import re
 import socket
@@ -33,6 +33,10 @@ def _try_parse_hex_byte_stream(text: str) -> Optional[bytes]:
     parts = s.split()
     if not parts:
         return None
+    # One token like "50" is ambiguous (decimal text vs hex 0x50); P0002/P0001 frames
+    # always use multiple whitespace-separated byte tokens (e.g. "AA 03 11").
+    if len(parts) < 2:
+        return None
     out = bytearray()
     for p in parts:
         if not _HEX_TOKEN.match(p):
@@ -45,8 +49,8 @@ def _normalize_uart_input(text: str) -> bytes:
     """
     Build UART RX payload for bare-metal tests.
 
-    - If the whole input (tokens separated by whitespace) is hex-bytes only, send
-      raw bytes (P0002-style ``AA 03 11 ...``).
+    - If the input has at least two whitespace-separated tokens and each is a
+      two-digit hex byte, send raw bytes (P0001/P0002-style ``AA 03 11 ...``).
     - Otherwise UTF-8 encode the string (legacy scanf/stdin-style problems).
     - Append ``\\n`` if missing for newlib _read() EOF; 0x0A in IDLE is ignored by
       P0002 frame sync.
@@ -159,10 +163,8 @@ class BareMetalUartRunner:
 
             # 4) Feed UART input.
             conn.sendall(uart_bytes)
-            try:
-                conn.shutdown(socket.SHUT_WR)
-            except Exception:
-                pass
+            # Do not shutdown(SHUT_WR): on some hosts QEMU USART RX may not deliver
+            # buffered bytes to the guest after half-close (P0004 blocks on first RX).
 
             # 5) 可选：默认 — 发输入后再翻转，再给程序时间反应
             if need_inject and after_in:

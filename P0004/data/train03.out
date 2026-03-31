@@ -1,0 +1,5 @@
+[H] avg_resp=1.33ms max=2.00ms jitter=1.00ms stack=96B
+[M] avg_resp=7.25ms max=8.00ms jitter=1.00ms stack=112B
+[L] avg_resp=11.00ms max=14.00ms jitter=8.00ms stack=104B
+[Deadlock] count=0 / 7 periods (0.0%)
+[Jitter Ratio H] sim_hw_jitter/sim_sim_jitter = 1.00/1.00 = 1.00 (OK)

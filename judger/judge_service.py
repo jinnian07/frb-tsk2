@@ -146,11 +146,11 @@ class JudgeService:
             except Exception as e:
                 _, st_out_compile = clang_tidy_run(self.task2_root, code)
                 return JudgeResponse(
-                    overall_result="RE",
+                    overall_result="CE",
                     test_cases=[
                         TestCaseResult(
                             name="compile",
-                            status="RE",
+                            status="CE",
                             time_ms=None,
                             info=str(e)[:2000],
                         )
@@ -307,10 +307,12 @@ class JudgeService:
                 (successful_recoveries / injection_total) if injection_total else 0.0
             )
 
-            # overall_result 优先级：TLE > RE > WA > AC（仅看无注入运行）
+            # overall_result 优先级：CE > TLE > RE > WA > AC（仅看无注入运行）
             normal_statuses = [test_cases[i].status for i in range(0, len(test_cases), 2)]
             statuses = set(normal_statuses)
-            if "TLE" in statuses:
+            if "CE" in statuses:
+                overall_result = "CE"
+            elif "TLE" in statuses:
                 overall_result = "TLE"
             elif "RE" in statuses:
                 overall_result = "RE"
@@ -407,11 +409,11 @@ class JudgeService:
                 combined = (out or "") + (err or "")
                 if "error" in combined.lower():
                     return JudgeResponse(
-                        overall_result="RE",
+                        overall_result="CE",
                         test_cases=[
                             TestCaseResult(
                                 name="compile",
-                                status="RE",
+                                status="CE",
                                 time_ms=None,
                                 info=combined[-2000:],
                             )
@@ -465,9 +467,11 @@ class JudgeService:
                 survival_rate = 0.0
                 successful_recoveries = 0
 
-                # overall_result 优先级：TLE > RE > WA > AC
+                # overall_result 优先级：CE > TLE > RE > WA > AC
                 statuses = {tc.status for tc in test_cases}
-                if "TLE" in statuses:
+                if "CE" in statuses:
+                    overall_result = "CE"
+                elif "TLE" in statuses:
                     overall_result = "TLE"
                 elif "RE" in statuses:
                     overall_result = "RE"

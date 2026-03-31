@@ -1,0 +1,3 @@
+ALLOC OK: 0
+FREE OK
+FREE ERROR: 重复释放

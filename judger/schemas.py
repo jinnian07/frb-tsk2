@@ -11,7 +11,7 @@ class JudgeRequest(BaseModel):
 
 class TestCaseResult(BaseModel):
     name: str
-    status: Literal["AC", "WA", "RE", "TLE"]
+    status: Literal["AC", "WA", "RE", "TLE", "CE"]
     time_ms: Optional[int] = None
     info: Optional[str] = None
     # 裸机栈染色 + GDB dump 水位线（普通 C 模式为 None）
@@ -25,7 +25,7 @@ class TestCaseResult(BaseModel):
 
 
 class JudgeResponse(BaseModel):
-    overall_result: Literal["AC", "WA", "RE", "TLE"]
+    overall_result: Literal["AC", "WA", "RE", "TLE", "CE"]
     test_cases: list[TestCaseResult]
     survival_rate: float = Field(
         description="裸机：注入后 AC 次数/注入总次数，范围[0,1]；普通 C 为 0"
